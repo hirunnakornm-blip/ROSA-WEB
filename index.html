@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROSA — หาห้องเช่า คอนโด พื้นที่เชิงพาณิชย์</title>
+<meta name="description" content="ROSA by Nova Wealth Asset — ค้นหาคอนโดและพื้นที่เชิงพาณิชย์ให้เช่า พร้อมรูปภาพ ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap">
+<style>
+  /* ============================================================
+     Tokens — same Nova Wealth Asset palette as the internal ROSA
+     app, so the public site and the back office feel like one
+     product. Mobile-first: every rule below is written for a phone
+     screen first, then widened with min-width media queries.
+     ============================================================ */
+  :root {
+    --bg: #F0EEE2;
+    --panel: #FFFFFF;
+    --ink: #1E2A22;
+    --ink-secondary: #5C6B62;
+    --muted: #8C8C80;
+    --border: #E3DCC8;
+    --table-header: #EFE9DA;
+    --brand-green: #2C4A36;
+    --accent: #8C6B33;
+    --accent-soft: #F1E7D2;
+    --danger: #B23A2E;
+    --success: #2E7D32;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131A15; --panel: #1D2921; --ink: #ECE6D6; --ink-secondary: #A6B2A9; --muted: #7C8880;
+      --border: #324035; --table-header: #243027; --accent: #D9B978; --accent-soft: #2C2617;
+      --danger: #D9584A; --success: #4CAF50;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131A15; --panel: #1D2921; --ink: #ECE6D6; --ink-secondary: #A6B2A9; --muted: #7C8880;
+    --border: #324035; --table-header: #243027; --accent: #D9B978; --accent-soft: #2C2617;
+    --danger: #D9584A; --success: #4CAF50;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Prompt', system-ui, sans-serif; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  h1, h2, h3 { font-family: 'Prompt', sans-serif; margin: 0; text-wrap: balance; }
+  [hidden] { display: none !important; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+  /* Header */
+  .site-header {
+    background: var(--brand-green);
+    color: #F3EFE3;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; gap: 10px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; }
+  .brand svg { width: 24px; height: 24px; flex-shrink: 0; }
+  .header-phone { font-size: 13px; opacity: 0.9; white-space: nowrap; }
+  .header-phone strong { color: #D9B978; }
+
+  /* Hero + search */
+  .hero {
+    background: linear-gradient(180deg, var(--accent-soft) 0%, var(--bg) 100%);
+    padding: 32px 0 24px;
+  }
+  .hero h1 { font-size: 24px; color: var(--ink); margin-bottom: 6px; }
+  .hero p { color: var(--ink-secondary); font-size: 14px; margin: 0 0 18px; }
+
+  .search-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    box-shadow: 0 8px 24px -14px rgba(0,0,0,0.25);
+  }
+  .search-field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .search-field select, .search-field input {
+    width: 100%; height: 42px; padding: 0 10px; border: 1px solid var(--border);
+    border-radius: 9px; font-size: 14px; font-family: inherit; background: var(--panel); color: var(--ink);
+  }
+  .search-btn {
+    height: 44px; border: none; border-radius: 9px; background: var(--brand-green); color: #fff;
+    font-family: inherit; font-size: 14.5px; font-weight: 600; cursor: pointer;
+  }
+  .search-btn:hover { background: #1F3527; }
+
+  @media (min-width: 720px) {
+    .search-panel { grid-template-columns: 1fr 1fr 1fr auto; align-items: end; }
+  }
+
+  /* Popular zones */
+  .section { padding: 28px 0; }
+  .section h2 { font-size: 18px; margin-bottom: 14px; }
+  .zone-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+  .zone-card {
+    flex: 0 0 auto; min-width: 140px; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; cursor: pointer;
+  }
+  .zone-card:hover { border-color: var(--accent); }
+  .zone-card .zone-name { font-weight: 700; font-size: 14px; }
+  .zone-card .zone-count { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  /* Listing grid */
+  .listing-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) { .listing-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .listing-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+  .listing-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    cursor: pointer; transition: box-shadow .15s ease;
+  }
+  .listing-card:hover { box-shadow: 0 10px 24px -14px rgba(0,0,0,0.3); }
+  .listing-photo { height: 160px; background: var(--table-header); position: relative; }
+  .listing-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .listing-photo .no-photo { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 12px; }
+  .listing-type-badge {
+    position: absolute; top: 8px; left: 8px; background: rgba(30,42,34,0.75); color: #fff;
+    font-size: 10.5px; padding: 3px 8px; border-radius: 20px;
+  }
+  .listing-body { padding: 12px 14px 14px; }
+  .listing-project { font-size: 12px; color: var(--ink-secondary); }
+  .listing-room { font-size: 15px; font-weight: 700; margin: 2px 0 6px; }
+  .listing-specs { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .listing-price { font-size: 17px; font-weight: 800; color: var(--accent); }
+  .listing-price span { font-size: 11px; font-weight: 400; color: var(--muted); }
+
+  .empty-state { text-align: center; color: var(--muted); padding: 40px 20px; font-size: 14px; }
+
+  /* Listing detail */
+  .detail-back { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: 13.5px; text-decoration: none; margin: 18px 0 12px; cursor: pointer; }
+  .detail-gallery { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 18px; }
+  .detail-gallery .g-photo { flex: 0 0 auto; width: 240px; height: 170px; border-radius: 12px; overflow: hidden; background: var(--table-header); }
+  .detail-gallery .g-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .detail-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .detail-title { font-size: 20px; font-weight: 800; }
+  .detail-sub { color: var(--ink-secondary); font-size: 13px; margin-top: 3px; }
+  .detail-price { font-size: 22px; font-weight: 800; color: var(--accent); }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 800px) { .detail-grid { grid-template-columns: 1.3fr 1fr; } }
+
+  .info-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+  .info-card h3 { font-size: 14px; margin-bottom: 10px; }
+  .info-row { display: flex; justify-content: space-between; font-size: 13.5px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .info-row:last-child { border-bottom: none; }
+  .info-row span:first-child { color: var(--ink-secondary); }
+  .landmark-line { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; }
+  .landmark-line .tag { font-size: 10.5px; background: var(--table-header); color: var(--ink-secondary); padding: 1px 7px; border-radius: 8px; margin-right: 6px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { background: var(--accent-soft); color: var(--accent); font-size: 12px; padding: 4px 10px; border-radius: 20px; }
+
+  /* Contact form */
+  .contact-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; position: sticky; top: 76px; }
+  .contact-card h3 { font-size: 15px; margin-bottom: 4px; }
+  .contact-card p { font-size: 12.5px; color: var(--ink-secondary); margin: 0 0 14px; }
+  .form-group { margin-bottom: 12px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-secondary); margin-bottom: 5px; }
+  .form-group input, .form-group textarea {
+    width: 100%; padding: 9px 10px; font-family: inherit; font-size: 13.5px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--panel); color: var(--ink); box-sizing: border-box;
+  }
+  .form-group textarea { resize: vertical; min-height: 64px; }
+  .form-group input:focus, .form-group textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .submit-btn {
+    width: 100%; height: 44px; border: none; border-radius: 9px; background: var(--brand-green); color: #fff;
+    font-family: inherit; font-size: 14.5px; font-weight: 600; cursor: pointer;
+  }
+  .submit-btn:hover { background: #1F3527; }
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .form-success { background: #EAF4EC; border: 1px solid var(--success); color: #1F5C29; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 8px; align-items: center; }
+  .form-error { background: #FBEDE8; border: 1px solid var(--danger); color: #7A2E22; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 10px; }
+
+  /* Footer */
+  .site-footer { background: var(--panel); border-top: 1px solid var(--border); padding: 28px 0; margin-top: 30px; }
+  .footer-grid { display: grid; grid-template-columns: 1fr; gap: 20px; font-size: 13px; color: var(--ink-secondary); }
+  @media (min-width: 700px) { .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; } }
+  .footer-grid h4 { font-size: 12.5px; color: var(--ink); margin: 0 0 8px; }
+  .footer-grid a { display: block; color: var(--ink-secondary); text-decoration: none; padding: 3px 0; }
+  .footer-grid a:hover { color: var(--accent); }
+  .footer-bottom { text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 20px; }
+
+  .loading-note { text-align: center; color: var(--muted); font-size: 13px; padding: 24px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <g stroke="#D9B978" stroke-width="1.6" stroke-linecap="round">
+          <line x1="12" y1="12" x2="12" y2="3"></line>
+          <line x1="12" y1="12" x2="19.8" y2="7.5"></line>
+          <line x1="12" y1="12" x2="19.8" y2="16.5"></line>
+          <line x1="12" y1="12" x2="12" y2="21"></line>
+          <line x1="12" y1="12" x2="4.2" y2="16.5"></line>
+          <line x1="12" y1="12" x2="4.2" y2="7.5"></line>
+        </g>
+        <circle cx="12" cy="12" r="2.4" fill="#D9B978"></circle>
+      </svg>
+      ROSA
+    </div>
+    <div class="header-phone">โทร <strong>02-XXX-XXXX</strong></div>
+  </div>
+</header>
+
+<!-- BROWSE VIEW -->
+<div id="view-browse">
+  <section class="hero">
+    <div class="wrap">
+      <h1>หาห้องเช่าที่ใช่ กับ ROSA</h1>
+      <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
+
+      <div class="search-panel">
+        <div class="search-field">
+          <label for="f-type">ประเภททรัพย์</label>
+          <select id="f-type">
+            <option value="">ทุกประเภท</option>
+            <option value="Condo">คอนโด</option>
+            <option value="Commercial">พื้นที่เชิงพาณิชย์</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label for="f-roomtype">ประเภทห้อง</label>
+          <select id="f-roomtype">
+            <option value="">ทุกประเภทห้อง</option>
+            <option value="Studio">Studio</option>
+            <option value="1BR">1 ห้องนอน</option>
+            <option value="2BR">2 ห้องนอน</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label for="f-price">ช่วงราคา</label>
+          <select id="f-price">
+            <option value="">ทุกช่วงราคา</option>
+            <option value="0-10000">ไม่เกิน 10,000</option>
+            <option value="10000-15000">10,000 - 15,000</option>
+            <option value="15000-20000">15,000 - 20,000</option>
+            <option value="20000-999999">20,000 ขึ้นไป</option>
+          </select>
+        </div>
+        <button class="search-btn" onclick="applyFilters()">ค้นหา</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="zones-section" hidden>
+    <h2>ทำเลยอดนิยม</h2>
+    <div class="zone-row" id="zone-row"></div>
+  </section>
+
+  <section class="section wrap">
+    <h2>ห้องว่างพร้อมเช่า</h2>
+    <div id="listing-grid" class="listing-grid">
+      <div class="loading-note">กำลังโหลดรายการห้องว่าง...</div>
+    </div>
+  </section>
+</div>
+
+<!-- DETAIL VIEW -->
+<div id="view-detail" class="wrap" hidden>
+  <a class="detail-back" onclick="goBrowse()">&larr; กลับไปหน้ารายการห้อง</a>
+  <div id="detail-body"><div class="loading-note">กำลังโหลดข้อมูล...</div></div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <h4>ROSA by Nova Wealth Asset</h4>
+      <div style="color:var(--ink-secondary);">ผู้ให้บริการบริหารทรัพย์สินให้เช่า คอนโดและพื้นที่เชิงพาณิชย์</div>
+    </div>
+    <div>
+      <h4>ติดต่อเรา</h4>
+      <a href="tel:02XXXXXXX">โทร 02-XXX-XXXX</a>
+      <a href="#" id="footer-line">LINE Official</a>
+      <a href="#" id="footer-email">อีเมล</a>
+    </div>
+    <div>
+      <h4>ข้อมูล</h4>
+      <a href="#">นโยบายความเป็นส่วนตัว</a>
+      <a href="#">เงื่อนไขการใช้งาน</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; <span id="footer-year"></span> ROSA — Rental Operation &amp; Smart Assistant, powered by Nova Wealth Asset</div>
+</footer>
+
+<script>
+  /* ============================================================
+     CONFIG — the deployed ROSA Apps Script Web App URL. This must
+     be the "/exec" URL from Deploy > Manage deployments in the
+     Apps Script project. It stays the same across "New version"
+     redeploys of the SAME deployment; only creating a brand-new
+     deployment changes it — update this constant if that happens.
+     ============================================================ */
+  var API_BASE = 'https://script.google.com/macros/s/AKfycbw7mZP85BwkAY2t1FmtHUl2WY2RxE--2odJPOKmktvJVWcTNNrhOQqmHVx_LpWb7SVE4tg/exec';
+
+  var state = { listings: [], filtered: [] };
+
+  /* JSONP — a plain cross-origin fetch() to an Apps Script exec URL
+     is blocked by the browser (Apps Script responses carry no CORS
+     header), so this loads the response as a <script> tag instead,
+     which isn't subject to CORS. */
+  function jsonp(params, callback) {
+    var cbName = 'rosaCb' + Date.now() + Math.floor(Math.random() * 100000);
+    window[cbName] = function (data) {
+      callback(data);
+      delete window[cbName];
+      script.parentNode.removeChild(script);
+    };
+    var qs = Object.keys(params).map(function (k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }).join('&');
+    var script = document.createElement('script');
+    script.src = API_BASE + '?' + qs + '&callback=' + cbName;
+    script.onerror = function () {
+      callback({ success: false, error: 'โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่' });
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+    document.body.appendChild(script);
+  }
+
+  function money(n) { return '฿' + Number(n || 0).toLocaleString(); }
+
+  function loadListings() {
+    jsonp({ api: 'listings' }, function (res) {
+      if (!res.success) {
+        document.getElementById('listing-grid').innerHTML = '<div class="empty-state">' + res.error + '</div>';
+        return;
+      }
+      state.listings = res.data;
+      state.filtered = res.data;
+      renderZones();
+      renderListings();
+    });
+  }
+
+  function renderZones() {
+    var zones = {};
+    state.listings.forEach(function (l) {
+      if (!l.zone) return;
+      zones[l.zone] = (zones[l.zone] || 0) + 1;
+    });
+    var keys = Object.keys(zones);
+    if (keys.length === 0) return;
+
+    document.getElementById('zones-section').hidden = false;
+    var html = '';
+    keys.forEach(function (z) {
+      html += '<div class="zone-card" onclick="filterByZone(\'' + z + '\')">' +
+        '<div class="zone-name">' + z + '</div>' +
+        '<div class="zone-count">' + zones[z] + ' ห้องว่าง</div>' +
+        '</div>';
+    });
+    document.getElementById('zone-row').innerHTML = html;
+  }
+
+  function filterByZone(zone) {
+    state.filtered = state.listings.filter(function (l) { return l.zone === zone; });
+    renderListings();
+    window.scrollTo({ top: document.getElementById('listing-grid').offsetTop - 80, behavior: 'smooth' });
+  }
+
+  function applyFilters() {
+    var type = document.getElementById('f-type').value;
+    var roomType = document.getElementById('f-roomtype').value;
+    var priceRange = document.getElementById('f-price').value;
+    var min = 0, max = Infinity;
+    if (priceRange) {
+      var parts = priceRange.split('-');
+      min = Number(parts[0]);
+      max = Number(parts[1]);
+    }
+
+    state.filtered = state.listings.filter(function (l) {
+      if (type && l.propertyType !== type) return false;
+      if (roomType && l.type !== roomType) return false;
+      var rate = Number(l.rate) || 0;
+      if (rate < min || rate > max) return false;
+      return true;
+    });
+    renderListings();
+  }
+
+  function renderListings() {
+    var grid = document.getElementById('listing-grid');
+    if (state.filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state">ไม่พบห้องว่างตามเงื่อนไขที่เลือก ลองปรับตัวกรองดูใหม่</div>';
+      return;
+    }
+    var html = '';
+    state.filtered.forEach(function (l) {
+      html += '<div class="listing-card" onclick="goDetail(' + l.id + ')">' +
+        '<div class="listing-photo">' +
+        (l.coverPhoto
+          ? '<img src="' + l.coverPhoto + '" alt="' + l.roomNumber + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">'
+          : '') +
+        '<div class="no-photo" style="' + (l.coverPhoto ? 'display:none;' : '') + '">ยังไม่มีรูปภาพ</div>' +
+        '<span class="listing-type-badge">' + l.type + '</span>' +
+        '</div>' +
+        '<div class="listing-body">' +
+        '<div class="listing-project">' + l.project + '</div>' +
+        '<div class="listing-room">ห้อง ' + l.roomNumber + '</div>' +
+        '<div class="listing-specs">' + (l.sizeSqm ? l.sizeSqm + ' ตร.ม.' : '') + (l.floor ? ' &middot; ชั้น ' + l.floor : '') + '</div>' +
+        '<div class="listing-price">' + money(l.rate) + '<span> /เดือน</span></div>' +
+        '</div></div>';
+    });
+    grid.innerHTML = html;
+  }
+
+  function goDetail(roomId) {
+    location.hash = '#/room/' + roomId;
+  }
+  function goBrowse() {
+    location.hash = '';
+  }
+
+  function renderDetail(roomId) {
+    document.getElementById('view-browse').hidden = true;
+    document.getElementById('view-detail').hidden = false;
+    document.getElementById('detail-body').innerHTML = '<div class="loading-note">กำลังโหลดข้อมูล...</div>';
+
+    jsonp({ api: 'listing', roomId: roomId }, function (res) {
+      if (!res.success) {
+        document.getElementById('detail-body').innerHTML = '<div class="empty-state">' + res.error + '</div>';
+        return;
+      }
+      var d = res.data;
+      var room = d.room, property = d.property;
+
+      var galleryHtml = '<div class="detail-gallery">';
+      if (d.photos.length === 0) {
+        galleryHtml += '<div class="g-photo"><div class="no-photo" style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);">ยังไม่มีรูปภาพ</div></div>';
+      } else {
+        d.photos.forEach(function (p) {
+          galleryHtml += '<div class="g-photo"><img src="' + p.url + '" alt="' + p.category + '" onerror="this.parentElement.style.display=\'none\';"></div>';
+        });
+      }
+      galleryHtml += '</div>';
+
+      var landmarksHtml = d.landmarks.map(function (l) {
+        return '<div class="landmark-line"><span><span class="tag">' + l.type + '</span>' + l.name + '</span><span>' + (l.distance || '-') + '</span></div>';
+      }).join('') || '<div style="color:var(--muted);font-size:13px;">ยังไม่มีข้อมูลทำเลใกล้เคียง</div>';
+
+      var amenities = property && property.buildingAmenities ? property.buildingAmenities.split(',').map(function (s) { return s.trim(); }).filter(Boolean) : [];
+      var amenitiesHtml = amenities.length > 0
+        ? '<div class="chip-row">' + amenities.map(function (a) { return '<span class="chip">' + a + '</span>'; }).join('') + '</div>'
+        : '<div style="color:var(--muted);font-size:13px;">-</div>';
+
+      var html =
+        '<div class="detail-head">' +
+          '<div><div class="detail-title">ห้อง ' + room.roomNumber + (property ? ' &middot; ' + property.propertyName : '') + '</div>' +
+          '<div class="detail-sub">' + room.type + (room.floor ? ' &middot; ชั้น ' + room.floor : '') + (room.facing ? ' &middot; ทิศ' + room.facing : '') + (room.sizeSqm ? ' &middot; ' + room.sizeSqm + ' ตร.ม.' : '') + (property ? ' &middot; ' + property.zone : '') + '</div></div>' +
+          '<div class="detail-price">' + money(room.rate) + '<span style="font-size:12px;color:var(--ink-secondary);"> /เดือน</span></div>' +
+        '</div>' +
+        galleryHtml +
+        '<div class="detail-grid">' +
+          '<div>' +
+            (property && property.description ? '<div class="info-card">' + property.description + '</div>' : '') +
+            '<div class="info-card"><h3>ทำเลใกล้เคียง</h3>' + landmarksHtml + '</div>' +
+            '<div class="info-card"><h3>สิ่งอำนวยความสะดวกในโครงการ</h3>' + amenitiesHtml + '</div>' +
+            '<div class="info-card"><h3>เงื่อนไข</h3>' +
+              '<div class="info-row"><span>นโยบายสัตว์เลี้ยง</span><span>' + (property && property.petPolicy ? property.petPolicy : '-') + '</span></div>' +
+              '<div class="info-row"><span>สัญญาขั้นต่ำ</span><span>' + (property && property.minContractMonths ? property.minContractMonths + ' เดือน' : '-') + '</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div>' +
+            '<div class="contact-card">' +
+              '<h3>สนใจห้องนี้?</h3>' +
+              '<p>กรอกข้อมูลไว้ ทีมงานจะติดต่อกลับภายใน 24 ชม.</p>' +
+              '<div class="form-group"><label>ชื่อ-นามสกุล *</label><input id="lead-name" type="text"></div>' +
+              '<div class="form-group"><label>เบอร์โทร *</label><input id="lead-phone" type="tel"></div>' +
+              '<div class="form-group"><label>ข้อความเพิ่มเติม</label><textarea id="lead-note" placeholder="เช่น สะดวกดูห้องวันไหน"></textarea></div>' +
+              '<button class="submit-btn" id="lead-submit" onclick="submitLead(' + room.id + ', \'' + (property ? property.propertyName.replace(/'/g, "\\'") : '') + '\', \'' + room.type + '\')">ส่งข้อมูลติดต่อกลับ</button>' +
+              '<div id="lead-feedback"></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      document.getElementById('detail-body').innerHTML = html;
+    });
+  }
+
+  function submitLead(roomId, project, roomType) {
+    var name = document.getElementById('lead-name').value.trim();
+    var phone = document.getElementById('lead-phone').value.trim();
+    var note = document.getElementById('lead-note').value.trim();
+    var feedback = document.getElementById('lead-feedback');
+    var btn = document.getElementById('lead-submit');
+
+    if (!name || !phone) {
+      feedback.innerHTML = '<div class="form-error">กรอกชื่อและเบอร์โทรก่อนส่งนะครับ</div>';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'กำลังส่ง...';
+
+    jsonp({
+      api: 'lead', leadName: name, phone: phone, note: note,
+      roomId: roomId, project: project, roomTypeInterest: roomType
+    }, function (res) {
+      btn.disabled = false;
+      btn.textContent = 'ส่งข้อมูลติดต่อกลับ';
+      if (res.success) {
+        feedback.innerHTML = '<div class="form-success">&#10003; ส่งข้อมูลสำเร็จ ทีมงานจะติดต่อกลับเร็วๆ นี้</div>';
+        document.getElementById('lead-name').value = '';
+        document.getElementById('lead-phone').value = '';
+        document.getElementById('lead-note').value = '';
+      } else {
+        feedback.innerHTML = '<div class="form-error">' + res.error + '</div>';
+      }
+    });
+  }
+
+  function route() {
+    var hash = location.hash;
+    var match = hash.match(/^#\/room\/(\d+)$/);
+    if (match) {
+      renderDetail(match[1]);
+    } else {
+      document.getElementById('view-detail').hidden = true;
+      document.getElementById('view-browse').hidden = false;
+    }
+  }
+
+  window.addEventListener('hashchange', route);
+  window.onload = function () {
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    loadListings();
+    route();
+  };
+</script>
+</body>
+</html>
