@@ -9,12 +9,13 @@
 <style>
   /* ============================================================
      Tokens — same Nova Wealth Asset palette as the internal ROSA
-     app, so the public site and the back office feel like one
-     product. Mobile-first: every rule below is written for a phone
-     screen first, then widened with min-width media queries.
+     app. Content area reads as white; the sidebar keeps its own
+     dark-green brand band (deliberately NOT white — a same-color
+     sidebar+page reads as flat/washed out) so the two areas stay
+     visually distinct the way the internal app's sidebar does.
      ============================================================ */
   :root {
-    --bg: #F0EEE2;
+    --bg: #FAFAF8;
     --panel: #FFFFFF;
     --ink: #1E2A22;
     --ink-secondary: #5C6B62;
@@ -26,6 +27,11 @@
     --accent-soft: #F1E7D2;
     --danger: #B23A2E;
     --success: #2E7D32;
+    --gold: #C9A768;
+    --sidebar-bg-1: #24402F;
+    --sidebar-bg-2: #1B3324;
+    --sidebar-ink: #F3EFE3;
+    --sidebar-ink-muted: #A9BDAE;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -41,7 +47,8 @@
   }
 
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Prompt', system-ui, sans-serif; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Prompt', system-ui, sans-serif; }
   img { max-width: 100%; display: block; }
   a { color: inherit; }
   h1, h2, h3 { font-family: 'Prompt', sans-serif; margin: 0; text-wrap: balance; }
@@ -49,19 +56,63 @@
 
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
 
-  /* Header */
-  .site-header {
-    background: var(--brand-green);
-    color: #F3EFE3;
+  /* ---------------- App shell: sidebar + content ---------------- */
+  .shell { display: flex; min-height: 100%; }
+
+  .sidebar {
+    width: 232px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, var(--sidebar-bg-1) 0%, var(--sidebar-bg-2) 100%);
+    color: var(--sidebar-ink);
+    padding: 22px 16px;
     position: sticky;
     top: 0;
-    z-index: 10;
+    height: 100vh;
+    overflow-y: auto;
   }
-  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; gap: 10px; }
-  .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 18px; }
-  .brand svg { width: 24px; height: 24px; flex-shrink: 0; }
-  .header-phone { font-size: 13px; opacity: 0.9; white-space: nowrap; }
-  .header-phone strong { color: #D9B978; }
+  .sidebar-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .sidebar-brand svg { width: 34px; height: 30px; flex-shrink: 0; }
+  .brand-nova { font-weight: 800; font-size: 17px; letter-spacing: .02em; line-height: 1; color: var(--sidebar-ink); }
+  .brand-wealth { font-size: 10px; font-weight: 600; letter-spacing: .06em; color: var(--gold); margin-top: 2px; }
+
+  .sidebar-nav { display: flex; flex-direction: column; gap: 2px; margin-bottom: 20px; }
+  .nav-link {
+    display: flex; align-items: center; gap: 9px; padding: 10px 12px; border-radius: 9px;
+    color: var(--sidebar-ink-muted); font-size: 14px; text-decoration: none; cursor: pointer;
+  }
+  .nav-link:hover { background: rgba(255,255,255,0.06); color: var(--sidebar-ink); }
+  .nav-link.active { background: rgba(201,167,104,0.16); color: var(--gold); font-weight: 600; }
+  .nav-link .nav-icon { width: 16px; text-align: center; flex-shrink: 0; }
+
+  .sidebar-contact { border-top: 1px solid rgba(255,255,255,0.12); padding-top: 16px; font-size: 12.5px; color: var(--sidebar-ink-muted); }
+  .sidebar-contact strong { display: block; color: var(--gold); font-size: 14px; margin-bottom: 2px; }
+
+  .mobile-topbar {
+    display: none;
+    align-items: center; justify-content: space-between;
+    background: var(--sidebar-bg-1); color: var(--sidebar-ink);
+    padding: 12px 16px; position: sticky; top: 0; z-index: 20;
+  }
+  .mobile-topbar .brand-mini { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px; }
+  .mobile-topbar .brand-mini svg { width: 22px; height: 19px; }
+  .menu-toggle { background: none; border: none; color: var(--sidebar-ink); font-size: 22px; cursor: pointer; line-height: 1; padding: 4px; }
+
+  .sidebar-backdrop { display: none; }
+
+  @media (max-width: 880px) {
+    .shell { display: block; }
+    .mobile-topbar { display: flex; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; height: 100vh; z-index: 30;
+      transform: translateX(-100%); transition: transform .2s ease;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop.open {
+      display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 25;
+    }
+  }
+
+  .content { flex: 1; min-width: 0; }
 
   /* Hero + search */
   .hero {
@@ -158,7 +209,7 @@
   .chip { background: var(--accent-soft); color: var(--accent); font-size: 12px; padding: 4px 10px; border-radius: 20px; }
 
   /* Contact form */
-  .contact-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; position: sticky; top: 76px; }
+  .contact-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; position: sticky; top: 16px; }
   .contact-card h3 { font-size: 15px; margin-bottom: 4px; }
   .contact-card p { font-size: 12.5px; color: var(--ink-secondary); margin: 0 0 14px; }
   .form-group { margin-bottom: 12px; }
@@ -178,6 +229,28 @@
   .form-success { background: #EAF4EC; border: 1px solid var(--success); color: #1F5C29; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 10px; display: flex; gap: 8px; align-items: center; }
   .form-error { background: #FBEDE8; border: 1px solid var(--danger); color: #7A2E22; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 10px; }
 
+  /* Blog */
+  .blog-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 640px) { .blog-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .blog-grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .blog-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; cursor: pointer; transition: box-shadow .15s ease; }
+  .blog-card:hover { box-shadow: 0 10px 24px -14px rgba(0,0,0,0.3); }
+  .blog-cover { height: 150px; background: var(--table-header); }
+  .blog-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .blog-cover .no-photo { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 12px; }
+  .blog-card-body { padding: 14px 16px 16px; }
+  .blog-card-date { font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
+  .blog-card-title { font-size: 15.5px; font-weight: 700; margin-bottom: 6px; }
+  .blog-card-excerpt { font-size: 13px; color: var(--ink-secondary); line-height: 1.5; }
+
+  .blog-post-cover { width: 100%; height: 280px; border-radius: 14px; overflow: hidden; background: var(--table-header); margin-bottom: 20px; }
+  .blog-post-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .blog-post-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .blog-post-meta { font-size: 12.5px; color: var(--muted); margin-bottom: 20px; }
+  .blog-post-content { font-size: 15px; line-height: 1.8; color: var(--ink); max-width: 720px; }
+  .blog-post-content img { border-radius: 12px; margin: 12px 0; }
+  .blog-post-content p { margin: 0 0 16px; }
+
   /* Footer */
   .site-footer { background: var(--panel); border-top: 1px solid var(--border); padding: 28px 0; margin-top: 30px; }
   .footer-grid { display: grid; grid-template-columns: 1fr; gap: 20px; font-size: 13px; color: var(--ink-secondary); }
@@ -192,105 +265,146 @@
 </head>
 <body>
 
-<header class="site-header">
-  <div class="wrap">
-    <div class="brand">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <g stroke="#D9B978" stroke-width="1.6" stroke-linecap="round">
-          <line x1="12" y1="12" x2="12" y2="3"></line>
-          <line x1="12" y1="12" x2="19.8" y2="7.5"></line>
-          <line x1="12" y1="12" x2="19.8" y2="16.5"></line>
-          <line x1="12" y1="12" x2="12" y2="21"></line>
-          <line x1="12" y1="12" x2="4.2" y2="16.5"></line>
-          <line x1="12" y1="12" x2="4.2" y2="7.5"></line>
-        </g>
-        <circle cx="12" cy="12" r="2.4" fill="#D9B978"></circle>
-      </svg>
-      ROSA
-    </div>
-    <div class="header-phone">โทร <strong>02-XXX-XXXX</strong></div>
-  </div>
-</header>
+<!-- Nova Wealth Asset logo mark — recreated as inline SVG (3 tower
+     silhouettes converging on a ring emblem) and adapted per-surface:
+     gold on the dark sidebar here, rather than embedding the source
+     raster file. Reused wherever the logo appears on this page. -->
+<template id="tpl-logo-mark">
+  <svg viewBox="0 0 48 40" fill="none" aria-hidden="true">
+    <g stroke="var(--gold)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M4 34 L4 20 L12 8 L20 20 L20 34"></path>
+      <path d="M14 34 L14 14 L24 2 L34 14 L34 34"></path>
+      <path d="M28 34 L28 20 L36 8 L44 20 L44 34"></path>
+    </g>
+    <circle cx="24" cy="27" r="6.2" stroke="var(--gold)" stroke-width="2" fill="none"></circle>
+    <circle cx="24" cy="27" r="2.2" fill="var(--gold)"></circle>
+  </svg>
+</template>
 
-<!-- BROWSE VIEW -->
-<div id="view-browse">
-  <section class="hero">
-    <div class="wrap">
-      <h1>หาห้องเช่าที่ใช่ กับ ROSA</h1>
-      <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
+<div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
-      <div class="search-panel">
-        <div class="search-field">
-          <label for="f-type">ประเภททรัพย์</label>
-          <select id="f-type">
-            <option value="">ทุกประเภท</option>
-            <option value="Condo">คอนโด</option>
-            <option value="Commercial">พื้นที่เชิงพาณิชย์</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label for="f-roomtype">ประเภทห้อง</label>
-          <select id="f-roomtype">
-            <option value="">ทุกประเภทห้อง</option>
-            <option value="Studio">Studio</option>
-            <option value="1BR">1 ห้องนอน</option>
-            <option value="2BR">2 ห้องนอน</option>
-          </select>
-        </div>
-        <div class="search-field">
-          <label for="f-price">ช่วงราคา</label>
-          <select id="f-price">
-            <option value="">ทุกช่วงราคา</option>
-            <option value="0-10000">ไม่เกิน 10,000</option>
-            <option value="10000-15000">10,000 - 15,000</option>
-            <option value="15000-20000">15,000 - 20,000</option>
-            <option value="20000-999999">20,000 ขึ้นไป</option>
-          </select>
-        </div>
-        <button class="search-btn" onclick="applyFilters()">ค้นหา</button>
+<div class="mobile-topbar">
+  <div class="brand-mini" id="mobile-brand-slot"></div>
+  <button class="menu-toggle" onclick="openSidebar()" aria-label="เปิดเมนู">&#9776;</button>
+</div>
+
+<div class="shell">
+  <aside class="sidebar" id="site-sidebar">
+    <div class="sidebar-brand" id="sidebar-brand-slot">
+      <div>
+        <div class="brand-nova">NOVA</div>
+        <div class="brand-wealth">WEALTH ASSET</div>
       </div>
     </div>
-  </section>
-
-  <section class="section wrap" id="zones-section" hidden>
-    <h2>ทำเลยอดนิยม</h2>
-    <div class="zone-row" id="zone-row"></div>
-  </section>
-
-  <section class="section wrap">
-    <h2>ห้องว่างพร้อมเช่า</h2>
-    <div id="listing-grid" class="listing-grid">
-      <div class="loading-note">กำลังโหลดรายการห้องว่าง...</div>
+    <nav class="sidebar-nav">
+      <a class="nav-link" id="nav-home" onclick="goBrowse()"><span class="nav-icon">&#8962;</span>หน้าแรก</a>
+      <a class="nav-link" id="nav-blog" onclick="goBlogList()"><span class="nav-icon">&#9997;</span>Blog</a>
+      <a class="nav-link" href="#contact-section" onclick="closeSidebar()"><span class="nav-icon">&#9742;</span>ติดต่อเรา</a>
+    </nav>
+    <div class="sidebar-contact">
+      <strong>02-XXX-XXXX</strong>
+      ROSA by Nova Wealth Asset<br>ผู้ให้บริการบริหารทรัพย์สินให้เช่า
     </div>
-  </section>
+  </aside>
+
+  <main class="content">
+
+    <!-- BROWSE VIEW -->
+    <div id="view-browse">
+      <section class="hero">
+        <div class="wrap">
+          <h1>หาห้องเช่าที่ใช่ กับ ROSA</h1>
+          <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
+
+          <div class="search-panel">
+            <div class="search-field">
+              <label for="f-type">ประเภททรัพย์</label>
+              <select id="f-type">
+                <option value="">ทุกประเภท</option>
+                <option value="Condo">คอนโด</option>
+                <option value="Commercial">พื้นที่เชิงพาณิชย์</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label for="f-roomtype">ประเภทห้อง</label>
+              <select id="f-roomtype">
+                <option value="">ทุกประเภทห้อง</option>
+                <option value="Studio">Studio</option>
+                <option value="1BR">1 ห้องนอน</option>
+                <option value="2BR">2 ห้องนอน</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label for="f-price">ช่วงราคา</label>
+              <select id="f-price">
+                <option value="">ทุกช่วงราคา</option>
+                <option value="0-10000">ไม่เกิน 10,000</option>
+                <option value="10000-15000">10,000 - 15,000</option>
+                <option value="15000-20000">15,000 - 20,000</option>
+                <option value="20000-999999">20,000 ขึ้นไป</option>
+              </select>
+            </div>
+            <button class="search-btn" onclick="applyFilters()">ค้นหา</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section wrap" id="zones-section" hidden>
+        <h2>ทำเลยอดนิยม</h2>
+        <div class="zone-row" id="zone-row"></div>
+      </section>
+
+      <section class="section wrap">
+        <h2>ห้องว่างพร้อมเช่า</h2>
+        <div id="listing-grid" class="listing-grid">
+          <div class="loading-note">กำลังโหลดรายการห้องว่าง...</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div id="view-detail" class="wrap" hidden>
+      <a class="detail-back" onclick="goBrowse()">&larr; กลับไปหน้ารายการห้อง</a>
+      <div id="detail-body"><div class="loading-note">กำลังโหลดข้อมูล...</div></div>
+    </div>
+
+    <!-- BLOG LIST VIEW -->
+    <div id="view-blog-list" class="section wrap" hidden>
+      <h2>บทความ &amp; สาระน่ารู้</h2>
+      <div id="blog-grid" class="blog-grid">
+        <div class="loading-note">กำลังโหลดบทความ...</div>
+      </div>
+    </div>
+
+    <!-- BLOG DETAIL VIEW -->
+    <div id="view-blog-detail" class="wrap" hidden style="padding-top:18px;padding-bottom:20px;">
+      <a class="detail-back" onclick="goBlogList()">&larr; กลับไปหน้าบทความ</a>
+      <div id="blog-detail-body"><div class="loading-note">กำลังโหลดบทความ...</div></div>
+    </div>
+
+    <footer class="site-footer" id="contact-section">
+      <div class="wrap footer-grid">
+        <div>
+          <h4>ROSA by Nova Wealth Asset</h4>
+          <div style="color:var(--ink-secondary);">ผู้ให้บริการบริหารทรัพย์สินให้เช่า คอนโดและพื้นที่เชิงพาณิชย์</div>
+        </div>
+        <div>
+          <h4>ติดต่อเรา</h4>
+          <a href="tel:02XXXXXXX">โทร 02-XXX-XXXX</a>
+          <a href="#" id="footer-line">LINE Official</a>
+          <a href="#" id="footer-email">อีเมล</a>
+        </div>
+        <div>
+          <h4>ข้อมูล</h4>
+          <a href="#">นโยบายความเป็นส่วนตัว</a>
+          <a href="#">เงื่อนไขการใช้งาน</a>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; <span id="footer-year"></span> ROSA — Rental Operation &amp; Smart Assistant, powered by Nova Wealth Asset</div>
+    </footer>
+
+  </main>
 </div>
-
-<!-- DETAIL VIEW -->
-<div id="view-detail" class="wrap" hidden>
-  <a class="detail-back" onclick="goBrowse()">&larr; กลับไปหน้ารายการห้อง</a>
-  <div id="detail-body"><div class="loading-note">กำลังโหลดข้อมูล...</div></div>
-</div>
-
-<footer class="site-footer">
-  <div class="wrap footer-grid">
-    <div>
-      <h4>ROSA by Nova Wealth Asset</h4>
-      <div style="color:var(--ink-secondary);">ผู้ให้บริการบริหารทรัพย์สินให้เช่า คอนโดและพื้นที่เชิงพาณิชย์</div>
-    </div>
-    <div>
-      <h4>ติดต่อเรา</h4>
-      <a href="tel:02XXXXXXX">โทร 02-XXX-XXXX</a>
-      <a href="#" id="footer-line">LINE Official</a>
-      <a href="#" id="footer-email">อีเมล</a>
-    </div>
-    <div>
-      <h4>ข้อมูล</h4>
-      <a href="#">นโยบายความเป็นส่วนตัว</a>
-      <a href="#">เงื่อนไขการใช้งาน</a>
-    </div>
-  </div>
-  <div class="footer-bottom">&copy; <span id="footer-year"></span> ROSA — Rental Operation &amp; Smart Assistant, powered by Nova Wealth Asset</div>
-</footer>
 
 <script>
   /* ============================================================
@@ -302,9 +416,36 @@
      ============================================================ */
   var API_BASE = 'https://script.google.com/macros/s/AKfycbw7mZP85BwkAY2t1FmtHUl2WY2RxE--2odJPOKmktvJVWcTNNrhOQmHVx_LpWb7SVE4tg/exec';
 
-  var state = { listings: [], filtered: [] };
+  var state = { listings: [], filtered: [], blogPosts: [] };
 
-  /* JSONP — a plain cross-origin fetch() to an Apps Script exec URL
+  /* Clone the logo <template> into both slots (sidebar + mobile topbar). */
+  function mountLogoMarks() {
+    var tpl = document.getElementById('tpl-logo-mark');
+    document.getElementById('sidebar-brand-slot').prepend(tpl.content.cloneNode(true));
+    var mobileSlot = document.getElementById('mobile-brand-slot');
+    mobileSlot.appendChild(tpl.content.cloneNode(true));
+    var mobileText = document.createElement('span');
+    mobileText.textContent = 'NOVA';
+    mobileText.style.marginLeft = '6px';
+    mobileSlot.appendChild(mobileText);
+  }
+
+  function openSidebar() {
+    document.getElementById('site-sidebar').classList.add('open');
+    document.getElementById('sidebar-backdrop').classList.add('open');
+  }
+  function closeSidebar() {
+    document.getElementById('site-sidebar').classList.remove('open');
+    document.getElementById('sidebar-backdrop').classList.remove('open');
+  }
+
+  function setActiveNav(id) {
+    document.querySelectorAll('.nav-link').forEach(function (n) { n.classList.remove('active'); });
+    var el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  }
+
+  /* JSONP — a plain cross-origin fetch() to an Apps Script exec url
      is blocked by the browser (Apps Script responses carry no CORS
      header), so this loads the response as a <script> tag instead,
      which isn't subject to CORS. */
@@ -366,7 +507,7 @@
   function filterByZone(zone) {
     state.filtered = state.listings.filter(function (l) { return l.zone === zone; });
     renderListings();
-    window.scrollTo({ top: document.getElementById('listing-grid').offsetTop - 80, behavior: 'smooth' });
+    window.scrollTo({ top: document.getElementById('listing-grid').offsetTop - 20, behavior: 'smooth' });
   }
 
   function applyFilters() {
@@ -421,11 +562,18 @@
   }
   function goBrowse() {
     location.hash = '';
+    closeSidebar();
+  }
+  function goBlogList() {
+    location.hash = '#/blog';
+    closeSidebar();
+  }
+  function goBlogDetail(slug) {
+    location.hash = '#/blog/' + slug;
   }
 
   function renderDetail(roomId) {
-    document.getElementById('view-browse').hidden = true;
-    document.getElementById('view-detail').hidden = false;
+    showView('view-detail');
     document.getElementById('detail-body').innerHTML = '<div class="loading-note">กำลังโหลดข้อมูล...</div>';
 
     jsonp({ api: 'listing', roomId: roomId }, function (res) {
@@ -521,19 +669,97 @@
     });
   }
 
+  /* ---------------- Blog ---------------- */
+
+  function loadBlogList() {
+    document.getElementById('blog-grid').innerHTML = '<div class="loading-note">กำลังโหลดบทความ...</div>';
+    jsonp({ api: 'posts' }, function (res) {
+      if (!res.success) {
+        document.getElementById('blog-grid').innerHTML = '<div class="empty-state">' + res.error + '</div>';
+        return;
+      }
+      state.blogPosts = res.data;
+      renderBlogList();
+    });
+  }
+
+  function renderBlogList() {
+    var grid = document.getElementById('blog-grid');
+    if (state.blogPosts.length === 0) {
+      grid.innerHTML = '<div class="empty-state">ยังไม่มีบทความในขณะนี้</div>';
+      return;
+    }
+    var html = '';
+    state.blogPosts.forEach(function (p) {
+      html += '<div class="blog-card" onclick="goBlogDetail(\'' + p.slug + '\')">' +
+        '<div class="blog-cover">' +
+        (p.coverImageUrl
+          ? '<img src="' + p.coverImageUrl + '" alt="' + p.title + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">'
+          : '') +
+        '<div class="no-photo" style="' + (p.coverImageUrl ? 'display:none;' : '') + '">ROSA Blog</div>' +
+        '</div>' +
+        '<div class="blog-card-body">' +
+        '<div class="blog-card-date">' + (p.publishedDate || '') + (p.author ? ' &middot; ' + p.author : '') + '</div>' +
+        '<div class="blog-card-title">' + p.title + '</div>' +
+        '<div class="blog-card-excerpt">' + (p.excerpt || '') + '</div>' +
+        '</div></div>';
+    });
+    grid.innerHTML = html;
+  }
+
+  function renderBlogDetail(slug) {
+    showView('view-blog-detail');
+    document.getElementById('blog-detail-body').innerHTML = '<div class="loading-note">กำลังโหลดบทความ...</div>';
+
+    jsonp({ api: 'post', slug: slug }, function (res) {
+      if (!res.success) {
+        document.getElementById('blog-detail-body').innerHTML = '<div class="empty-state">' + res.error + '</div>';
+        return;
+      }
+      var p = res.data;
+      var html =
+        (p.coverImageUrl ? '<div class="blog-post-cover"><img src="' + p.coverImageUrl + '" alt="' + p.title + '"></div>' : '') +
+        '<div class="blog-post-title">' + p.title + '</div>' +
+        '<div class="blog-post-meta">' + (p.publishedDate || '') + (p.author ? ' &middot; โดย ' + p.author : '') + '</div>' +
+        '<div class="blog-post-content">' + p.content + '</div>';
+      document.getElementById('blog-detail-body').innerHTML = html;
+    });
+  }
+
+  /* ---------------- Router ---------------- */
+
+  function showView(id) {
+    ['view-browse', 'view-detail', 'view-blog-list', 'view-blog-detail'].forEach(function (v) {
+      document.getElementById(v).hidden = (v !== id);
+    });
+  }
+
   function route() {
     var hash = location.hash;
-    var match = hash.match(/^#\/room\/(\d+)$/);
-    if (match) {
-      renderDetail(match[1]);
+    var roomMatch = hash.match(/^#\/room\/(\d+)$/);
+    var blogDetailMatch = hash.match(/^#\/blog\/(.+)$/);
+
+    if (roomMatch) {
+      setActiveNav('nav-home');
+      renderDetail(roomMatch[1]);
+    } else if (blogDetailMatch) {
+      setActiveNav('nav-blog');
+      renderBlogDetail(decodeURIComponent(blogDetailMatch[1]));
+    } else if (hash === '#/blog') {
+      setActiveNav('nav-blog');
+      showView('view-blog-list');
+      if (state.blogPosts.length === 0) loadBlogList();
+      else renderBlogList();
     } else {
-      document.getElementById('view-detail').hidden = true;
-      document.getElementById('view-browse').hidden = false;
+      setActiveNav('nav-home');
+      showView('view-browse');
     }
+    window.scrollTo(0, 0);
   }
 
   window.addEventListener('hashchange', route);
   window.onload = function () {
+    mountLogoMarks();
     document.getElementById('footer-year').textContent = new Date().getFullYear();
     loadListings();
     route();
