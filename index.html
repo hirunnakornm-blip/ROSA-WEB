@@ -15,34 +15,34 @@
      visually distinct the way the internal app's sidebar does.
      ============================================================ */
   :root {
-    --bg: #FAFAF8;
+    --bg: #F8FAF8;
     --panel: #FFFFFF;
     --ink: #1E2A22;
     --ink-secondary: #5C6B62;
     --muted: #8C8C80;
-    --border: #E3DCC8;
-    --table-header: #EFE9DA;
+    --border: #E2E7E1;
+    --table-header: #EDF1EC;
     --brand-green: #2C4A36;
     --accent: #8C6B33;
-    --accent-soft: #F1E7D2;
+    --accent-soft: #E7EFE7;
     --danger: #B23A2E;
     --success: #2E7D32;
     --gold: #C9A768;
-    --sidebar-bg-1: #24402F;
-    --sidebar-bg-2: #1B3324;
+    --sidebar-bg-1: #34513F;
+    --sidebar-bg-2: #294130;
     --sidebar-ink: #F3EFE3;
-    --sidebar-ink-muted: #A9BDAE;
+    --sidebar-ink-muted: #B7C7BB;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #131A15; --panel: #1D2921; --ink: #ECE6D6; --ink-secondary: #A6B2A9; --muted: #7C8880;
-      --border: #324035; --table-header: #243027; --accent: #D9B978; --accent-soft: #2C2617;
+      --border: #324035; --table-header: #243027; --accent: #D9B978; --accent-soft: #223026;
       --danger: #D9584A; --success: #4CAF50;
     }
   }
   :root[data-theme="dark"] {
     --bg: #131A15; --panel: #1D2921; --ink: #ECE6D6; --ink-secondary: #A6B2A9; --muted: #7C8880;
-    --border: #324035; --table-header: #243027; --accent: #D9B978; --accent-soft: #2C2617;
+    --border: #324035; --table-header: #243027; --accent: #D9B978; --accent-soft: #223026;
     --danger: #D9584A; --success: #4CAF50;
   }
 
@@ -137,7 +137,13 @@
   .hero {
     background: linear-gradient(180deg, var(--accent-soft) 0%, var(--bg) 100%);
     padding: 32px 0 24px;
+    position: relative;
+    overflow: hidden;
   }
+  /* Quiet brand mark, not a stock illustration — the same ring motif from
+     the logo, echoed huge and near-invisible. A small, deliberate touch
+     rather than a loud decorative graphic. */
+  .hero-watermark { position: absolute; top: -50px; right: -50px; width: 230px; height: 230px; opacity: 0.055; pointer-events: none; }
   .hero h1 { font-size: 24px; color: var(--ink); margin-bottom: 6px; }
   .hero p { color: var(--ink-secondary); font-size: 14px; margin: 0 0 18px; }
 
@@ -168,7 +174,8 @@
 
   /* Popular zones */
   .section { padding: 28px 0; }
-  .section h2 { font-size: 18px; margin-bottom: 14px; }
+  .section h2 { font-size: 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 9px; }
+  .section h2::before { content: ''; display: block; width: 16px; height: 3px; border-radius: 2px; background: var(--brand-green); flex-shrink: 0; }
   .zone-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
   .zone-card {
     flex: 0 0 auto; min-width: 140px; background: var(--panel); border: 1px solid var(--border);
@@ -335,6 +342,11 @@
         <div class="hero-banner-tag">ROSA by Nova Wealth Asset</div>
       </div>
       <section class="hero">
+        <svg class="hero-watermark" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="70" fill="none" stroke="var(--brand-green)" stroke-width="1.4"></circle>
+          <circle cx="100" cy="100" r="46" fill="none" stroke="var(--brand-green)" stroke-width="1.4"></circle>
+          <circle cx="100" cy="100" r="6" fill="var(--brand-green)"></circle>
+        </svg>
         <div class="wrap">
           <h1>หาห้องเช่าที่ใช่ กับ ROSA</h1>
           <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
