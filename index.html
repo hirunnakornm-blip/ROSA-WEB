@@ -114,14 +114,19 @@
 
   .content { flex: 1; min-width: 0; }
 
-  /* Hero banner — static (not a carousel) image header above the search block */
-  .hero-banner { position: relative; width: 100%; height: 200px; overflow: hidden; }
-  .hero-banner svg { display: block; width: 100%; height: 100%; }
+  /* Hero banner — static (not a carousel) image header above the search block.
+     Kept short on purpose so it doesn't push the search/listing content down. */
+  .hero-banner { position: relative; width: 100%; height: 120px; overflow: hidden; }
+  .hero-banner img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero-banner::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.38) 100%);
+  }
   .hero-banner-tag {
-    position: absolute; left: 20px; bottom: 16px; background: rgba(20,30,23,0.45); color: #fff;
+    position: absolute; left: 20px; bottom: 12px; z-index: 1; background: rgba(20,30,23,0.45); color: #fff;
     font-size: 12px; padding: 5px 12px; border-radius: 20px; font-weight: 600; letter-spacing: .02em;
   }
-  @media (min-width: 720px) { .hero-banner { height: 280px; } }
+  @media (min-width: 720px) { .hero-banner { height: 170px; } }
 
   /* Hero + search */
   .hero {
@@ -321,37 +326,7 @@
     <!-- BROWSE VIEW -->
     <div id="view-browse">
       <div class="hero-banner" aria-hidden="true">
-        <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="hbWall" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#2C4A36"/>
-              <stop offset="100%" stop-color="#182619"/>
-            </linearGradient>
-            <linearGradient id="hbSky" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#F3EDDC"/>
-              <stop offset="100%" stop-color="#F8F4E9"/>
-            </linearGradient>
-          </defs>
-          <rect width="1200" height="400" fill="url(#hbWall)"/>
-          <rect x="620" y="40" width="520" height="320" rx="14" fill="url(#hbSky)"/>
-          <circle cx="1030" cy="110" r="42" fill="#C9A768" opacity="0.85"/>
-          <path d="M900 360 L940 260 L985 300 L1035 210 L1080 260 L1140 360 Z" fill="#8C6B33" opacity="0.35"/>
-          <path d="M780 360 L810 280 L845 310 L880 240 L915 300 L940 360 Z" fill="#2C4A36" opacity="0.4"/>
-          <line x1="880" y1="40" x2="880" y2="360" stroke="#F3EFE3" stroke-width="6"/>
-          <line x1="620" y1="200" x2="1140" y2="200" stroke="#F3EFE3" stroke-width="6"/>
-          <rect x="620" y="40" width="520" height="320" rx="14" fill="none" stroke="#F3EFE3" stroke-width="6"/>
-          <g>
-            <rect x="90" y="300" width="90" height="70" rx="8" fill="#8C6B33"/>
-            <path d="M135 300 C100 250 90 190 135 150 C150 210 150 260 135 300 Z" fill="#3E6B4E"/>
-            <path d="M135 300 C170 260 190 200 165 140 C130 190 120 250 135 300 Z" fill="#4E7E5C"/>
-            <path d="M135 300 C90 270 60 220 80 170 C120 200 140 250 135 300 Z" fill="#345C40"/>
-          </g>
-          <g>
-            <rect x="230" y="260" width="330" height="90" rx="20" fill="#C9A768" opacity="0.9"/>
-            <rect x="230" y="230" width="90" height="60" rx="16" fill="#D9B978"/>
-            <rect x="470" y="230" width="90" height="60" rx="16" fill="#D9B978"/>
-          </g>
-        </svg>
+        <img src="assets/hero-banner.jpg" alt="">
         <div class="hero-banner-tag">ROSA by Nova Wealth Asset</div>
       </div>
       <section class="hero">
