@@ -237,6 +237,30 @@
   .lb-prev { left: 16px; top: 50%; transform: translateY(-50%); }
   .lb-next { right: 16px; top: 50%; transform: translateY(-50%); }
   .lb-close { right: 16px; top: 16px; font-size: 20px; }
+
+  /* In-page message box styled like a Windows dialog, in the Nova palette
+     (used instead of browser popups: phone link on desktop, lead form). */
+  .win-backdrop { position: fixed; inset: 0; z-index: 200; background: rgba(12,18,14,0.45); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .win { width: 100%; max-width: 420px; background: var(--panel); border: 1px solid var(--green-deep); border-radius: 10px; overflow: hidden; box-shadow: 0 24px 60px -20px rgba(0,0,0,0.55); animation: win-in .14s ease-out; }
+  @keyframes win-in { from { transform: scale(.96); opacity: 0; } to { transform: none; opacity: 1; } }
+  .win-title { display: flex; align-items: center; justify-content: space-between; height: 40px; padding-left: 14px; background: var(--green-deep); color: #fff; font-size: 13.5px; font-weight: 600; }
+  .win-title .win-logo { display: inline-flex; align-items: center; gap: 8px; }
+  .win-title .win-logo svg { width: 20px; height: 17px; color: #fff; }
+  .win-x { width: 46px; height: 40px; border: none; background: transparent; color: #fff; font-size: 15px; cursor: pointer; }
+  .win-x:hover { background: #C42B1C; }
+  .win-body { display: flex; gap: 14px; align-items: flex-start; padding: 22px 20px 20px; font-size: 14.5px; line-height: 1.6; color: var(--ink); }
+  .win-icon { width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; }
+  .win-icon.info { background: var(--green-soft); color: var(--green); }
+  .win-icon.ok { background: #E3F1E5; color: var(--success); }
+  .win-icon.warn { background: var(--gold-soft); color: var(--gold-deep); }
+  .win-big { font-size: 24px; font-weight: 800; color: var(--green); letter-spacing: .02em; margin: 4px 0 2px; }
+  .win-note { font-size: 12.5px; color: var(--ink-secondary); }
+  .win-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px; background: var(--bg-soft); border-top: 1px solid var(--border); }
+  .win-btn { min-width: 100px; height: 36px; padding: 0 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--panel); color: var(--ink); font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+  .win-btn:hover { border-color: var(--green); }
+  .win-btn.primary { background: var(--green); border-color: var(--green); color: #fff; }
+  .win-btn.primary:hover { background: var(--green-deep); }
+  .win-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   .detail-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
   .detail-title { font-size: 24px; font-weight: 800; }
   .detail-sub { color: var(--ink-secondary); font-size: 13.5px; margin-top: 4px; }
@@ -750,7 +774,7 @@
     var btn = document.getElementById('lead-submit');
 
     if (!name || !phone) {
-      feedback.innerHTML = '<div class="form-error">กรอกชื่อและเบอร์โทรก่อนส่งนะครับ</div>';
+      winDialog({ title: 'ข้อมูลยังไม่ครบ', icon: 'warn', html: 'กรุณากรอก<b>ชื่อ-นามสกุล</b>และ<b>เบอร์โทร</b>ก่อนส่งนะครับ' });
       return;
     }
     btn.disabled = true;
@@ -763,12 +787,13 @@
       btn.disabled = false;
       btn.textContent = 'ส่งข้อมูลติดต่อกลับ';
       if (res.success) {
-        feedback.innerHTML = '<div class="form-success">&#10003; ส่งข้อมูลสำเร็จ ทีมงานจะติดต่อกลับเร็วๆ นี้</div>';
+        feedback.innerHTML = '';
+        winDialog({ title: 'ส่งข้อมูลเรียบร้อย', icon: 'ok', html: 'ขอบคุณที่สนใจห้องของเราครับ<br>ทีมงานจะติดต่อกลับภายใน 24 ชม.<div class="win-note" style="margin-top:6px;">หากต้องการคุยด่วน โทร ' + PHONE_DISPLAY + '</div>' });
         document.getElementById('lead-name').value = '';
         document.getElementById('lead-phone').value = '';
         document.getElementById('lead-note').value = '';
       } else {
-        feedback.innerHTML = '<div class="form-error">' + esc(res.error) + '</div>';
+        winDialog({ title: 'ส่งข้อมูลไม่สำเร็จ', icon: 'warn', html: esc(res.error) + '<div class="win-note" style="margin-top:6px;">ลองใหม่อีกครั้ง หรือโทร ' + PHONE_DISPLAY + '</div>' });
       }
     });
   }
@@ -800,6 +825,74 @@
     if (e.key === 'Escape') closeLightbox();
     else if (e.key === 'ArrowLeft') stepLightbox(-1);
     else if (e.key === 'ArrowRight') stepLightbox(1);
+  });
+
+  /* ---------------- Windows-style message box ---------------- */
+
+  var WIN_ICONS = { info: 'i', ok: '&#10003;', warn: '!' };
+
+  /* opts: { title, icon: 'info'|'ok'|'warn', html, buttons: [{ label, primary, onClick(close, btn) }] } */
+  function winDialog(opts) {
+    closeWin();
+    var wrap = document.createElement('div');
+    wrap.className = 'win-backdrop';
+    wrap.id = 'win-dialog';
+    wrap.innerHTML =
+      '<div class="win" role="dialog" aria-modal="true" aria-labelledby="win-title-text">' +
+        '<div class="win-title"><span class="win-logo">' + document.getElementById('tpl-logo-mark').innerHTML + '<span id="win-title-text">' + esc(opts.title) + '</span></span>' +
+        '<button class="win-x" aria-label="ปิด">&#10005;</button></div>' +
+        '<div class="win-body"><div class="win-icon ' + (opts.icon || 'info') + '">' + WIN_ICONS[opts.icon || 'info'] + '</div><div>' + opts.html + '</div></div>' +
+        '<div class="win-foot"></div>' +
+      '</div>';
+    var foot = wrap.querySelector('.win-foot');
+    (opts.buttons || [{ label: 'ตกลง', primary: true }]).forEach(function (b) {
+      var btn = document.createElement('button');
+      btn.className = 'win-btn' + (b.primary ? ' primary' : '');
+      btn.textContent = b.label;
+      btn.onclick = function () { if (b.onClick) b.onClick(closeWin, btn); else closeWin(); };
+      foot.appendChild(btn);
+    });
+    wrap.querySelector('.win-x').onclick = closeWin;
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) closeWin(); });
+    document.body.appendChild(wrap);
+    var primary = foot.querySelector('.primary') || foot.querySelector('button');
+    if (primary) primary.focus();
+  }
+  function closeWin() {
+    var w = document.getElementById('win-dialog');
+    if (w) w.parentNode.removeChild(w);
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeWin(); });
+
+  function copyText(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { copyFallback(text); done(); });
+    } else { copyFallback(text); done(); }
+  }
+  function copyFallback(text) {
+    var t = document.createElement('textarea');
+    t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(t);
+  }
+
+  /* Phone links: on phones/tablets let tel: dial as usual; on a computer the
+     browser would show its own "pick an application" popup, so show ours. */
+  var IS_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+    if (!a || IS_TOUCH) return;
+    e.preventDefault();
+    closeNav();
+    winDialog({
+      title: 'ติดต่อ Nova Wealth Asset', icon: 'info',
+      html: 'โทรหาทีมงานได้ที่เบอร์<div class="win-big">' + PHONE_DISPLAY + '</div><div class="win-note">โทรจากมือถือของคุณได้เลย หรือกดคัดลอกเบอร์ไว้</div>',
+      buttons: [
+        { label: 'คัดลอกเบอร์', onClick: function (close, btn) { copyText(PHONE_DISPLAY, function () { btn.textContent = 'คัดลอกแล้ว ✓'; }); } },
+        { label: 'ปิด', primary: true }
+      ]
+    });
   });
 
   function loadBlogList() {
