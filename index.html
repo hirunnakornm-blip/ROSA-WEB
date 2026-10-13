@@ -87,7 +87,7 @@
     .nav-links.open { display: flex; }
     .nav-link.active::after { display: none; }
     .nav-links .nav-cta-mobile { display: flex; }
-    .topbar .tb-note { display: none; }
+    .topbar .tb-note, .topbar .tb-mail { display: none; }
   }
   .nav-cta-mobile { display: none; justify-content: center; margin-top: 6px; }
 
@@ -376,7 +376,7 @@
 <div class="topbar">
   <div class="wrap">
     <span class="tb-note">ROSA by Nova Wealth Asset · ผู้ให้บริการบริหารทรัพย์สินให้เช่า คอนโดและพื้นที่เชิงพาณิชย์</span>
-    <span>โทร <a href="tel:0624426529">062-442-6529</a></span>
+    <span><span class="tb-mail"><a href="mailto:sales@novawealthasset.com">sales@novawealthasset.com</a> &nbsp;·&nbsp; </span>โทร <a href="tel:0624426529">062-442-6529</a></span>
   </div>
 </div>
 
@@ -544,7 +544,7 @@
       <h4>ติดต่อเรา</h4>
       <a class="footer-phone" href="tel:0624426529">062-442-6529</a>
       <a href="#" id="footer-line">LINE Official</a>
-      <a href="#" id="footer-email">อีเมล</a>
+      <a href="mailto:sales@novawealthasset.com" id="footer-email">sales@novawealthasset.com</a>
     </div>
     <div>
       <h4>ข้อมูล</h4>
@@ -565,6 +565,7 @@
   var API_BASE = 'https://script.google.com/macros/s/AKfycbwOQzYP1I5CA8QNMH2-tuhBeDufg7D9rqdQTEZs4W6DzqjV71NJXllY3d-5Rgs6QDvPuw/exec';
   var PHONE_DISPLAY = '062-442-6529';
   var PHONE_TEL = '0624426529';
+  var EMAIL = 'sales@novawealthasset.com';
 
   var state = { listings: [], filtered: [], blogPosts: [], loaded: false };
 
@@ -900,19 +901,23 @@
     document.body.removeChild(t);
   }
 
-  /* Phone links: on phones/tablets let tel: dial as usual; on a computer the
-     browser would show its own "pick an application" popup, so show ours. */
+  /* Phone and email links: on phones/tablets let tel:/mailto: open the phone
+     or mail app as usual; on a computer the browser would show its own "pick
+     an application" popup, so show our contact box instead. */
   var IS_TOUCH = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
   document.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+    var a = e.target.closest ? e.target.closest('a[href^="tel:"], a[href^="mailto:"]') : null;
     if (!a || IS_TOUCH) return;
     e.preventDefault();
     closeNav();
+    var isMail = a.getAttribute('href').indexOf('mailto:') === 0;
     winDialog({
       title: 'ติดต่อ Nova Wealth Asset', icon: 'info',
-      html: 'โทรหาทีมงานได้ที่เบอร์<div class="win-big">' + PHONE_DISPLAY + '</div><div class="win-note">โทรจากมือถือของคุณได้เลย หรือกดคัดลอกเบอร์ไว้</div>',
+      html: (isMail
+        ? 'ส่งอีเมลถึงทีมงานได้ที่<div class="win-big" style="font-size:19px;">' + EMAIL + '</div><div class="win-note">หรือโทร ' + PHONE_DISPLAY + '</div>'
+        : 'โทรหาทีมงานได้ที่เบอร์<div class="win-big">' + PHONE_DISPLAY + '</div><div class="win-note">หรือส่งอีเมล ' + EMAIL + '</div>'),
       buttons: [
-        { label: 'คัดลอกเบอร์', onClick: function (close, btn) { copyText(PHONE_DISPLAY, function () { btn.textContent = 'คัดลอกแล้ว ✓'; }); } },
+        { label: isMail ? 'คัดลอกอีเมล' : 'คัดลอกเบอร์', onClick: function (close, btn) { copyText(isMail ? EMAIL : PHONE_DISPLAY, function () { btn.textContent = 'คัดลอกแล้ว ✓'; }); } },
         { label: 'ปิด', primary: true }
       ]
     });
