@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ROSA — หาห้องเช่า คอนโด พื้นที่เชิงพาณิชย์</title>
-<meta name="description" content="ROSA by Nova Wealth Asset — ค้นหาคอนโดและพื้นที่เชิงพาณิชย์ให้เช่า พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา โทร 061-449-2624">
+<meta name="description" content="ROSA by Nova Wealth Asset — ค้นหาคอนโดและพื้นที่เชิงพาณิชย์ให้เช่า พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา โทร 062-442-6529">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap">
 <style>
   /* Nova Wealth Asset palette — deep green + gold on cream/white, same
@@ -207,9 +207,36 @@
 
   /* ---------------- Detail ---------------- */
   .detail-back { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-size: 14px; font-weight: 600; text-decoration: none; margin: 24px 0 14px; cursor: pointer; }
-  .detail-gallery { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; }
-  .detail-gallery .g-photo { flex: 0 0 auto; width: 260px; height: 180px; border-radius: 12px; overflow: hidden; background: var(--bg-soft); }
-  .detail-gallery .g-photo img { width: 100%; height: 100%; object-fit: cover; }
+  /* Mosaic gallery: 1 large + up to 4 small; click opens the lightbox. */
+  .gallery { display: grid; gap: 8px; height: 440px; border-radius: 16px; overflow: hidden; margin-bottom: 22px; }
+  .gallery .g-tile { position: relative; overflow: hidden; background: var(--bg-soft); cursor: zoom-in; }
+  .gallery .g-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform .25s ease; }
+  .gallery .g-tile:hover img { transform: scale(1.03); }
+  .gallery .g-cat { position: absolute; left: 10px; bottom: 10px; background: rgba(20,34,25,0.72); color: #fff; font-size: 11.5px; padding: 3px 9px; border-radius: 6px; }
+  .gallery .g-more { position: absolute; inset: 0; background: rgba(20,34,25,0.55); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+  .gallery .g-all { display: none; position: absolute; right: 10px; bottom: 10px; background: rgba(255,255,255,0.94); color: var(--green); font-size: 12.5px; font-weight: 600; padding: 6px 12px; border-radius: 8px; }
+  .gallery.g-n1 { grid-template-columns: 1fr; }
+  .gallery.g-n2 { grid-template-columns: 2fr 1fr; }
+  .gallery.g-n3, .gallery.g-n4, .gallery.g-n5 { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+  .gallery.g-n3 .g-tile:first-child, .gallery.g-n4 .g-tile:first-child, .gallery.g-n5 .g-tile:first-child { grid-row: span 2; }
+  .gallery.g-n3 .g-tile:nth-child(2), .gallery.g-n3 .g-tile:nth-child(3) { grid-column: span 2; }
+  .gallery.g-n4 .g-tile:nth-child(4) { grid-column: 3; grid-row: 1 / span 2; }
+  .gallery .no-photo { height: 100%; }
+  @media (max-width: 700px) {
+    .gallery { height: 260px; grid-template-columns: 1fr !important; grid-template-rows: 1fr !important; }
+    .gallery .g-tile:not(:first-child) { display: none; }
+    .gallery .g-tile:first-child { grid-row: auto !important; }
+    .gallery .g-all { display: block; }
+  }
+
+  .lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(12,18,14,0.94); display: flex; align-items: center; justify-content: center; }
+  .lightbox img { max-width: 92vw; max-height: 80vh; border-radius: 10px; object-fit: contain; }
+  .lb-caption { position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; color: #E4EAE5; font-size: 14px; }
+  .lb-btn { position: absolute; background: rgba(255,255,255,0.12); color: #fff; border: none; width: 48px; height: 48px; border-radius: 50%; font-size: 24px; cursor: pointer; }
+  .lb-btn:hover { background: rgba(255,255,255,0.24); }
+  .lb-prev { left: 16px; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: 16px; top: 50%; transform: translateY(-50%); }
+  .lb-close { right: 16px; top: 16px; font-size: 20px; }
   .detail-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
   .detail-title { font-size: 24px; font-weight: 800; }
   .detail-sub { color: var(--ink-secondary); font-size: 13.5px; margin-top: 4px; }
@@ -302,7 +329,7 @@
 <div class="topbar">
   <div class="wrap">
     <span class="tb-note">ROSA by Nova Wealth Asset · ผู้ให้บริการบริหารทรัพย์สินให้เช่า คอนโดและพื้นที่เชิงพาณิชย์</span>
-    <span>โทร <a href="tel:0614492624">061-449-2624</a></span>
+    <span>โทร <a href="tel:0624426529">062-442-6529</a></span>
   </div>
 </div>
 
@@ -318,9 +345,9 @@
       <a class="nav-link" id="nav-home" onclick="goBrowse()">หน้าแรก</a>
       <a class="nav-link" id="nav-blog" onclick="goBlogList()">Blog</a>
       <a class="nav-link" id="nav-contact" onclick="scrollToContact()">ติดต่อเรา</a>
-      <a class="nav-cta nav-cta-mobile" href="tel:0614492624">&#9742; โทร 061-449-2624</a>
+      <a class="nav-cta nav-cta-mobile" href="tel:0624426529">&#9742; โทร 062-442-6529</a>
     </nav>
-    <a class="nav-cta" href="tel:0614492624">&#9742; 061-449-2624</a>
+    <a class="nav-cta" href="tel:0624426529">&#9742; 062-442-6529</a>
     <button class="menu-toggle" onclick="toggleNav()" aria-label="เปิดเมนู">&#9776;</button>
   </div>
 </header>
@@ -337,7 +364,7 @@
         <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
         <div class="hero-actions">
           <a class="btn-primary" onclick="scrollToListings()">ดูห้องว่าง &rarr;</a>
-          <a class="btn-ghost" href="tel:0614492624">&#9742; โทร 061-449-2624</a>
+          <a class="btn-ghost" href="tel:0624426529">&#9742; โทร 062-442-6529</a>
         </div>
       </div>
     </section>
@@ -415,7 +442,7 @@
           <div class="eyebrow">สำหรับเจ้าของห้อง</div>
           <h2>มีคอนโดอยากปล่อยเช่า?</h2>
           <p>ให้ Nova Wealth Asset ดูแลให้ครบ ตั้งแต่หาผู้เช่า ทำสัญญา เก็บค่าเช่า ไปจนถึงดูแลซ่อมบำรุง พร้อมรายงานให้เจ้าของทุกเดือน</p>
-          <a class="btn-primary" href="tel:0614492624">&#9742; ปรึกษาเรา 061-449-2624</a>
+          <a class="btn-primary" href="tel:0624426529">&#9742; ปรึกษาเรา 062-442-6529</a>
         </div>
         <div class="cta-img" aria-hidden="true"></div>
       </div>
@@ -444,6 +471,14 @@
 
 </main>
 
+<div class="lightbox" id="lightbox" hidden onclick="if (event.target === this) closeLightbox()">
+  <img id="lb-img" alt="">
+  <button class="lb-btn lb-prev" onclick="stepLightbox(-1)" aria-label="รูปก่อนหน้า">&#8249;</button>
+  <button class="lb-btn lb-next" onclick="stepLightbox(1)" aria-label="รูปถัดไป">&#8250;</button>
+  <button class="lb-btn lb-close" onclick="closeLightbox()" aria-label="ปิด">&#10005;</button>
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
 <footer class="site-footer" id="contact-section">
   <div class="wrap footer-grid">
     <div>
@@ -460,7 +495,7 @@
     </div>
     <div>
       <h4>ติดต่อเรา</h4>
-      <a class="footer-phone" href="tel:0614492624">061-449-2624</a>
+      <a class="footer-phone" href="tel:0624426529">062-442-6529</a>
       <a href="#" id="footer-line">LINE Official</a>
       <a href="#" id="footer-email">อีเมล</a>
     </div>
@@ -481,8 +516,8 @@
      know who is using it, which would block anonymous visitors here.
      ============================================================ */
   var API_BASE = 'https://script.google.com/macros/s/AKfycbwOQzYP1I5CA8QNMH2-tuhBeDufg7D9rqdQTEZs4W6DzqjV71NJXllY3d-5Rgs6QDvPuw/exec';
-  var PHONE_DISPLAY = '061-449-2624';
-  var PHONE_TEL = '0614492624';
+  var PHONE_DISPLAY = '062-442-6529';
+  var PHONE_TEL = '0624426529';
 
   var state = { listings: [], filtered: [], blogPosts: [], loaded: false };
 
@@ -652,10 +687,15 @@
       var d = res.data;
       var room = d.room, property = d.property;
 
-      var galleryHtml = '<div class="detail-gallery">' + (d.photos.length === 0
-        ? '<div class="g-photo"><div class="no-photo">ยังไม่มีรูปภาพ</div></div>'
-        : d.photos.map(function (p) {
-            return '<div class="g-photo"><img src="' + esc(p.url) + '" alt="' + esc(p.category) + '" loading="lazy" onerror="this.parentElement.style.display=\'none\';"></div>';
+      var photos = d.photos || [];
+      var shown = photos.slice(0, 5);
+      var galleryHtml = '<div class="gallery g-n' + Math.max(shown.length, 1) + '">' + (shown.length === 0
+        ? '<div class="g-tile" style="cursor:default;"><div class="no-photo">ยังไม่มีรูปภาพ</div></div>'
+        : shown.map(function (p, i) {
+            var extra = (i === 4 && photos.length > 5) ? '<div class="g-more">+' + (photos.length - 5) + ' รูป</div>' : '';
+            var all = (i === 0 && photos.length > 1) ? '<span class="g-all">ดูรูปทั้งหมด (' + photos.length + ')</span>' : '';
+            return '<div class="g-tile" onclick="openLightbox(' + i + ')"><img src="' + esc(p.url) + '" alt="' + esc(p.category) + '" loading="lazy" onerror="this.style.visibility=\'hidden\';">' +
+              (p.category && !extra ? '<span class="g-cat">' + esc(p.category) + '</span>' : '') + extra + all + '</div>';
           }).join('')) + '</div>';
 
       var landmarksHtml = d.landmarks.map(function (l) {
@@ -667,7 +707,7 @@
         ? '<div class="chip-row">' + amenities.map(function (a) { return '<span class="chip">' + esc(a) + '</span>'; }).join('') + '</div>'
         : '<div style="color:var(--muted);font-size:13px;">-</div>';
 
-      state.detail = { roomId: room.id, project: property ? property.propertyName : '', roomType: room.type };
+      state.detail = { roomId: room.id, project: property ? property.propertyName : '', roomType: room.type, photos: photos };
 
       document.getElementById('detail-body').innerHTML =
         '<div class="detail-head">' +
@@ -735,6 +775,33 @@
 
   /* ---------------- Blog ---------------- */
 
+  /* ---------------- Photo lightbox ---------------- */
+
+  function openLightbox(i) {
+    state.lbIndex = i;
+    document.getElementById('lightbox').hidden = false;
+    showLightboxPhoto();
+  }
+  function closeLightbox() { document.getElementById('lightbox').hidden = true; }
+  function stepLightbox(delta) {
+    var n = state.detail.photos.length;
+    state.lbIndex = (state.lbIndex + delta + n) % n;
+    showLightboxPhoto();
+  }
+  function showLightboxPhoto() {
+    var photos = state.detail.photos, p = photos[state.lbIndex];
+    document.getElementById('lb-img').src = p.url;
+    document.getElementById('lb-caption').textContent = (p.category ? p.category + ' · ' : '') + (state.lbIndex + 1) + ' / ' + photos.length;
+    document.querySelector('.lb-prev').hidden = photos.length < 2;
+    document.querySelector('.lb-next').hidden = photos.length < 2;
+  }
+  document.addEventListener('keydown', function (e) {
+    if (document.getElementById('lightbox').hidden) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowLeft') stepLightbox(-1);
+    else if (e.key === 'ArrowRight') stepLightbox(1);
+  });
+
   function loadBlogList() {
     document.getElementById('blog-grid').innerHTML = '<div class="loading-note">กำลังโหลดบทความ...</div>';
     jsonp({ api: 'posts' }, function (res) {
@@ -794,6 +861,7 @@
   }
 
   function route() {
+    closeLightbox();
     var hash = location.hash;
     var roomMatch = hash.match(/^#\/room\/(\d+)$/);
     var blogDetailMatch = hash.match(/^#\/blog\/(.+)$/);
