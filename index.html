@@ -26,6 +26,9 @@
     --green: #2C4A36;
     --green-deep: #1F3527;
     --green-soft: #EAF0EA;
+    --sage: #E1E9DD;
+    --sage-2: #C7D6C2;
+    --sage-3: #95AA98;
     --gold: #C9A768;
     --gold-deep: #8C6B33;
     --gold-soft: #F6EEDC;
@@ -37,11 +40,13 @@
     :root:not([data-theme="light"]) {
       --bg: #121915; --bg-soft: #18211B; --panel: #1D2921; --ink: #ECE6D6; --ink-secondary: #A9B4AB; --muted: #7E8A82;
       --border: #2F3D33; --green-soft: #223026; --gold-soft: #2D2A20; --gold-deep: #D9B978;
+      --sage: #1C2720; --sage-2: #26342A; --sage-3: #4E6455;
     }
   }
   :root[data-theme="dark"] {
     --bg: #121915; --bg-soft: #18211B; --panel: #1D2921; --ink: #ECE6D6; --ink-secondary: #A9B4AB; --muted: #7E8A82;
     --border: #2F3D33; --green-soft: #223026; --gold-soft: #2D2A20; --gold-deep: #D9B978;
+    --sage: #1C2720; --sage-2: #26342A; --sage-3: #4E6455;
   }
 
   * { box-sizing: border-box; }
@@ -54,9 +59,9 @@
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
 
   /* ---------------- Top bar + navbar ---------------- */
-  .topbar { background: var(--green-deep); color: #DCE5DD; font-size: 12.5px; }
+  .topbar { background: var(--sage-2); color: var(--ink); font-size: 12.5px; }
   .topbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; height: 34px; }
-  .topbar a { color: var(--gold); text-decoration: none; font-weight: 600; }
+  .topbar a { color: var(--ink); text-decoration: none; font-weight: 600; }
   .topbar .tb-note { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .navbar { position: sticky; top: 0; z-index: 40; background: var(--panel); border-bottom: 1px solid var(--border); }
@@ -96,26 +101,37 @@
   .nav-cta-mobile { display: none; justify-content: center; margin-top: 6px; }
 
   /* ---------------- Hero ---------------- */
-  .hero { position: relative; min-height: 460px; display: flex; align-items: center; overflow: hidden; }
-  .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% center; }
-  .hero::before {
-    content: ''; position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(90deg, rgba(20, 34, 25, 0.88) 0%, rgba(20, 34, 25, 0.62) 42%, rgba(20, 34, 25, 0.08) 78%);
-  }
-  .hero-content { position: relative; z-index: 2; width: 100%; padding: 56px 16px 110px; color: #fff; }
-  .hero-eyebrow { display: inline-block; font-size: 12.5px; letter-spacing: .08em; color: var(--gold); font-weight: 600; margin-bottom: 14px; }
-  .hero h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.12; font-weight: 800; max-width: 620px; }
-  .hero h1 em { font-style: normal; color: var(--gold); }
-  .hero p { font-size: clamp(15px, 1.6vw, 17px); color: #E4EAE5; max-width: 520px; margin: 16px 0 26px; line-height: 1.6; }
+  .hero { position: relative; background: var(--sage); overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 460px; height: 460px; right: -140px; top: -170px; border-radius: 50%; background: var(--sage-2); }
+  .hero::after { content: ''; position: absolute; width: 180px; height: 180px; left: -60px; bottom: -70px; border-radius: 50%; border: 2px solid var(--sage-3); }
+  .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding: 56px 16px 120px; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; letter-spacing: .08em; color: var(--gold-deep); font-weight: 700; margin-bottom: 16px; }
+  .hero-eyebrow::before { content: ''; width: 22px; height: 2px; background: var(--gold); border-radius: 2px; }
+  .hero h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.12; font-weight: 800; color: var(--ink); max-width: 560px; }
+  .hero h1 em { font-style: normal; color: var(--gold-deep); }
+  .hero p { font-size: clamp(15px, 1.6vw, 17px); color: var(--ink-secondary); max-width: 500px; margin: 16px 0 28px; line-height: 1.65; }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero-frame { position: relative; width: min(100%, 420px); margin-left: auto; }
+  .hero-arch { aspect-ratio: 10 / 11; border-radius: 220px 220px 22px 22px; overflow: hidden; border: 7px solid #fff; box-shadow: 0 30px 60px -30px rgba(31, 53, 39, 0.45); background: var(--sage-2); }
+  .hero-arch img { width: 100%; height: 100%; object-fit: cover; object-position: 62% center; }
+  .hero-sparkle { position: absolute; left: -26px; top: 18px; width: 40px; height: 40px; color: var(--gold); }
+  .hero-badge { position: absolute; left: -34px; bottom: 34px; display: flex; align-items: center; gap: 10px; background: var(--panel); border-radius: 14px; padding: 12px 16px; box-shadow: var(--shadow); }
+  .hero-badge b { font-size: 26px; line-height: 1; color: var(--green); }
+  .hero-badge span { font-size: 12.5px; line-height: 1.35; color: var(--ink-secondary); }
+  @media (max-width: 820px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 30px; padding: 40px 16px 100px; }
+    .hero-frame { margin: 0 auto; width: min(88%, 360px); }
+    .hero-badge { left: -12px; bottom: 20px; }
+    .hero-sparkle { left: -14px; }
+  }
   .btn-primary, .btn-ghost {
     display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 22px; border-radius: 10px;
     font-family: inherit; font-size: 15px; font-weight: 600; text-decoration: none; cursor: pointer; border: none;
   }
-  .btn-primary { background: var(--gold); color: #1F2A20; }
-  .btn-primary:hover { background: #D8B97E; }
-  .btn-ghost { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.55); }
-  .btn-ghost:hover { background: rgba(255,255,255,0.16); }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-deep); }
+  .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid currentColor; }
+  .btn-ghost:hover { background: rgba(44, 74, 54, 0.07); }
 
   /* Floating search card overlapping the hero */
   .search-wrap { position: relative; z-index: 5; margin-top: -64px; }
@@ -141,7 +157,7 @@
   @media (min-width: 980px) { .values { grid-template-columns: repeat(4, 1fr); } }
   .value { display: flex; gap: 14px; align-items: flex-start; }
   .value-icon {
-    width: 48px; height: 48px; border-radius: 50%; background: var(--green); color: var(--gold);
+    width: 48px; height: 48px; border-radius: 50%; background: var(--sage); color: var(--green);
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .value-icon svg { width: 22px; height: 22px; }
@@ -179,7 +195,7 @@
   .badge-type, .badge-status {
     position: absolute; top: 12px; font-size: 11.5px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
   }
-  .badge-type { left: 12px; background: var(--green); color: #fff; }
+  .badge-type { left: 12px; background: var(--sage); color: var(--green-deep); }
   .badge-status { right: 12px; background: rgba(255,255,255,0.92); color: var(--success); }
   .listing-body { padding: 16px 18px 18px; }
   .listing-price { font-size: 21px; font-weight: 800; color: var(--ink); }
@@ -200,13 +216,13 @@
   /* ---------------- Owner CTA banner ---------------- */
   .cta-banner {
     margin: 56px 0 8px; border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 1fr;
-    background: var(--green-deep); color: #fff;
+    background: var(--sage); color: var(--ink);
   }
   @media (min-width: 820px) { .cta-banner { grid-template-columns: 1.1fr 1fr; } }
   .cta-text { padding: 36px 32px; }
-  .cta-text .eyebrow { color: var(--gold); }
+  .cta-text .eyebrow { color: var(--gold-deep); }
   .cta-text h2 { font-size: clamp(22px, 2.6vw, 30px); margin-bottom: 10px; }
-  .cta-text p { color: #D6E0D8; font-size: 14.5px; line-height: 1.65; margin: 0 0 22px; max-width: 460px; }
+  .cta-text p { color: var(--ink-secondary); font-size: 14.5px; line-height: 1.65; margin: 0 0 22px; max-width: 460px; }
   .cta-img { min-height: 220px; background: url('assets/hero-banner.jpg') 30% center / cover no-repeat; }
 
   /* ---------------- Detail ---------------- */
@@ -339,9 +355,9 @@
   .blog-post-content blockquote { margin: 22px 0; padding: 14px 20px; border-left: 4px solid var(--gold); background: var(--gold-soft); border-radius: 0 10px 10px 0; color: var(--ink); }
   .blog-post-content img { border-radius: 12px; margin: 16px 0; }
   .blog-post-content a { color: var(--green); font-weight: 600; }
-  .post-cta { margin: 36px 0 8px; padding: 24px 26px; border-radius: 16px; background: var(--green-deep); color: #fff; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .post-cta { margin: 36px 0 8px; padding: 24px 26px; border-radius: 16px; background: var(--sage); color: var(--ink); display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   .post-cta h3 { font-size: 19px; margin-bottom: 4px; }
-  .post-cta p { margin: 0; color: #D6E0D8; font-size: 14px; }
+  .post-cta p { margin: 0; color: var(--ink-secondary); font-size: 14px; }
   .post-cta-actions { display: flex; gap: 10px; flex-wrap: wrap; }
   .more-posts { margin-top: 44px; }
   .more-posts h3 { font-size: 20px; margin-bottom: 16px; }
@@ -408,14 +424,20 @@
   <!-- BROWSE VIEW -->
   <div id="view-browse">
     <section class="hero">
-      <img class="hero-img" src="assets/hero-banner.jpg" alt="">
-      <div class="wrap hero-content">
-        <span class="hero-eyebrow">ROSA BY NOVA WEALTH ASSET</span>
-        <h1>หาห้องเช่าที่ใช่<br>กับ <em>ROSA</em></h1>
-        <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
-        <div class="hero-actions">
-          <a class="btn-primary" onclick="scrollToListings()">ดูห้องว่าง &rarr;</a>
-          <a class="btn-ghost" href="tel:0624426529">&#9742; โทร 062-442-6529</a>
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <span class="hero-eyebrow">ROSA BY NOVA WEALTH ASSET</span>
+          <h1>หาห้องเช่าที่ใช่<br>กับ <em>ROSA</em></h1>
+          <p>คอนโดและพื้นที่เชิงพาณิชย์ พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา</p>
+          <div class="hero-actions">
+            <a class="btn-primary" onclick="scrollToListings()">ดูห้องว่าง &rarr;</a>
+            <a class="btn-ghost" href="tel:0624426529">&#9742; โทร 062-442-6529</a>
+          </div>
+        </div>
+        <div class="hero-frame">
+          <svg class="hero-sparkle" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2 C21.5 14 26 18.5 38 20 C26 21.5 21.5 26 20 38 C18.5 26 14 21.5 2 20 C14 18.5 18.5 14 20 2Z" fill="currentColor"/></svg>
+          <div class="hero-arch"><img src="assets/hero-banner.jpg" alt="ห้องตัวอย่างจาก ROSA"></div>
+          <div class="hero-badge" id="hero-badge" hidden><b id="hero-count"></b><span>ห้องว่าง<br>พร้อมเข้าอยู่</span></div>
         </div>
       </div>
     </section>
@@ -641,6 +663,10 @@
       }
       state.loaded = true;
       state.listings = res.data;
+      if (res.data.length) {
+        document.getElementById('hero-count').textContent = res.data.length;
+        document.getElementById('hero-badge').hidden = false;
+      }
       state.filtered = res.data;
       renderZones();
       renderListings();
