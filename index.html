@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ROSA — หาห้องเช่า คอนโด พื้นที่เชิงพาณิชย์</title>
+<title>Nova Wealth Asset — ห้องเช่า คอนโด พื้นที่เชิงพาณิชย์</title>
 <meta name="description" content="ROSA by Nova Wealth Asset — ค้นหาคอนโดและพื้นที่เชิงพาณิชย์ให้เช่า พร้อมรูปภาพจริง ทำเลใกล้เคียง และทีมงานดูแลตลอดสัญญา โทร 062-442-6529">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
@@ -212,11 +212,12 @@
   .listing-body { padding: 16px 18px 18px; }
   .listing-price { font-size: 21px; font-weight: 800; color: var(--ink); }
   .listing-price span { font-size: 12.5px; font-weight: 400; color: var(--muted); }
-  .listing-room { font-size: 14.5px; font-weight: 600; margin: 4px 0 2px; }
+  .listing-specs { display: flex; gap: 6px 16px; flex-wrap: wrap; margin: 8px 0 6px; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+  .listing-specs span { display: inline-flex; align-items: center; gap: 6px; }
+  .listing-specs svg { width: 16px; height: 16px; color: var(--gold-deep); }
   .listing-project { font-size: 13px; color: var(--ink-secondary); }
-  .listing-specs { display: flex; gap: 14px; flex-wrap: wrap; border-top: 1px solid var(--border); margin-top: 14px; padding-top: 12px; font-size: 12.5px; color: var(--ink-secondary); }
-  .listing-specs span { display: inline-flex; align-items: center; gap: 5px; }
-  .listing-specs svg { width: 15px; height: 15px; color: var(--gold-deep); }
+  .listing-no { border-top: 1px solid var(--border); margin-top: 14px; padding-top: 11px; font-size: 12px; color: var(--muted); letter-spacing: .02em; }
+  .listing-no b { color: var(--ink-secondary); font-weight: 600; }
 
   .empty-state {
     grid-column: 1 / -1; text-align: center; color: var(--ink-secondary); padding: 44px 20px; font-size: 14.5px;
@@ -744,19 +745,19 @@
       var specs = [];
       if (l.sizeSqm) specs.push('<span>' + ICON_SIZE + esc(l.sizeSqm) + ' ตร.ม.</span>');
       if (l.floor) specs.push('<span>' + ICON_FLOOR + 'ชั้น ' + esc(l.floor) + '</span>');
-      if (l.type) specs.push('<span>' + ICON_BED + esc(l.type) + '</span>');
+      if (l.typeLabel || l.type) specs.push('<span>' + ICON_BED + esc(l.typeLabel || l.type) + '</span>');
       return '<div class="listing-card" onclick="goDetail(' + Number(l.id) + ')">' +
         '<div class="listing-photo">' +
-          (l.coverPhoto ? '<img src="' + esc(l.coverPhoto) + '" alt="ห้อง ' + esc(l.roomNumber) + '" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' : '') +
+          (l.coverPhoto ? '<img src="' + esc(l.coverPhoto) + '" alt="' + esc(l.project) + '" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' : '') +
           '<div class="no-photo" style="' + (l.coverPhoto ? 'display:none;' : '') + '">ยังไม่มีรูปภาพ</div>' +
           '<span class="badge-type">' + esc(l.propertyType === 'Commercial' ? 'พื้นที่เชิงพาณิชย์' : 'ให้เช่า') + '</span>' +
           '<span class="badge-status">' + (l.status === 'Reserved' ? 'มีผู้จองแล้ว' : 'ว่าง') + '</span>' +
         '</div>' +
         '<div class="listing-body">' +
           '<div class="listing-price">' + money(l.rate) + '<span> /เดือน</span></div>' +
-          '<div class="listing-room">ห้อง ' + esc(l.roomNumber) + '</div>' +
-          '<div class="listing-project">' + esc(l.project) + (l.zone ? ' &middot; ' + esc(l.zone) : '') + '</div>' +
           (specs.length ? '<div class="listing-specs">' + specs.join('') + '</div>' : '') +
+          '<div class="listing-project">' + esc(l.project) + (l.zone ? ' &middot; ' + esc(l.zone) : '') + '</div>' +
+          (l.listingNo ? '<div class="listing-no">Listing No. <b>' + esc(l.listingNo) + '</b></div>' : '') +
         '</div></div>';
     }).join('');
   }
@@ -802,8 +803,8 @@
 
       document.getElementById('detail-body').innerHTML =
         '<div class="detail-head">' +
-          '<div><div class="detail-title">ห้อง ' + esc(room.roomNumber) + (property ? ' &middot; ' + esc(property.propertyName) : '') + '</div>' +
-          '<div class="detail-sub">' + esc(room.type) + (room.floor ? ' &middot; ชั้น ' + esc(room.floor) : '') + (room.facing ? ' &middot; ทิศ' + esc(room.facing) : '') + (room.sizeSqm ? ' &middot; ' + esc(room.sizeSqm) + ' ตร.ม.' : '') + (property && property.zone ? ' &middot; ' + esc(property.zone) : '') + '</div></div>' +
+          '<div><div class="detail-title">' + esc(room.typeLabel || room.type || 'ห้องเช่า') + (property ? ' &middot; ' + esc(property.propertyName) : '') + '</div>' +
+          '<div class="detail-sub">' + (room.listingNo ? 'Listing No. <b>' + esc(room.listingNo) + '</b>' + (room.typeLabel ? ' &middot; ' + esc(room.type) : '') : esc(room.type)) + (room.floor ? ' &middot; ชั้น ' + esc(room.floor) : '') + (room.facing ? ' &middot; ทิศ' + esc(room.facing) : '') + (room.sizeSqm ? ' &middot; ' + esc(room.sizeSqm) + ' ตร.ม.' : '') + (property && property.zone ? ' &middot; ' + esc(property.zone) : '') + '</div></div>' +
           '<div class="detail-price">' + money(room.rate) + '<span style="font-size:13px;color:var(--ink-secondary);font-weight:400;"> /เดือน</span></div>' +
         '</div>' +
         galleryHtml +
@@ -820,7 +821,7 @@
           '<div>' +
             '<div class="contact-card">' +
               '<h3>สนใจห้องนี้?</h3>' +
-              '<p>โทรหาเราได้ทันที หรือกรอกข้อมูลไว้ ทีมงานจะติดต่อกลับภายใน 24 ชม.</p>' +
+              '<p>โทรหาเราได้ทันที หรือกรอกข้อมูลไว้ ทีมงานจะติดต่อกลับภายใน 24 ชม.' + (room.listingNo ? ' แจ้ง Listing No. <b>' + esc(room.listingNo) + '</b> เมื่อโทรสอบถาม' : '') + '</p>' +
               '<a class="contact-call" href="tel:' + PHONE_TEL + '">&#9742; โทร ' + PHONE_DISPLAY + '</a>' +
               '<div class="form-group"><label>ชื่อ-นามสกุล *</label><input id="lead-name" type="text"></div>' +
               '<div class="form-group"><label>เบอร์โทร *</label><input id="lead-phone" type="tel"></div>' +
@@ -1014,10 +1015,14 @@
      Posts that already contain HTML are shown as written (staff-authored). */
   function formatBlogContent(c) {
     c = String(c || '');
-    if (/<\/?(p|h[1-6]|ul|ol|li|br|img|a|b|strong|em|blockquote|div)\b/i.test(c)) return c;
+    var hasHtml = /<\/?(p|h[1-6]|ul|ol|li|br|img|a|b|strong|em|blockquote|div|figure)\b/i.test(c);
+    // Blank line = new paragraph, also in posts that mix text with <h2>/<img> (written by staff in ROSA).
     return c.split(/\n\s*\n/).map(function (para) {
       para = para.trim();
-      return para ? '<p>' + esc(para).replace(/\n/g, '<br>') + '</p>' : '';
+      if (!para) return '';
+      if (!hasHtml) return '<p>' + esc(para).replace(/\n/g, '<br>') + '</p>';
+      if (/^<(p|h[1-6]|ul|ol|img|blockquote|div|figure|table)\b/i.test(para)) return para;
+      return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
     }).join('');
   }
 
