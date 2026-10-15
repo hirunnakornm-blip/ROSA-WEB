@@ -366,7 +366,7 @@
   .blog-post-content ul, .blog-post-content ol { margin: 0 0 18px; padding-left: 22px; }
   .blog-post-content li { margin-bottom: 6px; }
   .blog-post-content blockquote { margin: 22px 0; padding: 14px 20px; border-left: 4px solid var(--gold); background: var(--gold-soft); border-radius: 0 10px 10px 0; color: var(--ink); }
-  .blog-post-content img { border-radius: 12px; margin: 16px 0; }
+  .blog-post-content img { display: block; width: 100%; height: auto; border-radius: 12px; margin: 16px 0 22px; }
   .blog-post-content a { color: var(--green); font-weight: 600; }
   .post-cta { margin: 36px 0 8px; padding: 24px 26px; border-radius: 16px; background: var(--sage); color: var(--ink); display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   .post-cta h3 { font-size: 19px; margin-bottom: 4px; }
@@ -1020,6 +1020,8 @@
     return c.split(/\n\s*\n/).map(function (para) {
       para = para.trim();
       if (!para) return '';
+      var h = /^(#{2,3})\s+([^\n]+)$/.exec(para); // "## หัวข้อ" = subheading, survives copy-paste where <h2> may not
+      if (h) return '<h' + h[1].length + '>' + (hasHtml ? h[2] : esc(h[2])) + '</h' + h[1].length + '>';
       if (!hasHtml) return '<p>' + esc(para).replace(/\n/g, '<br>') + '</p>';
       if (/^<(p|h[1-6]|ul|ol|img|blockquote|div|figure|table)\b/i.test(para)) return para;
       return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
