@@ -102,17 +102,21 @@
   @media (max-width: 1000px) { .topbar .tb-note { display: none; } }
 
   /* ---------------- Hero ---------------- */
-  .hero { position: relative; background: var(--sage); overflow: hidden; }
-  .hero::after { content: ''; position: absolute; width: 180px; height: 180px; left: -60px; bottom: -70px; border-radius: 50%; border: 2px solid var(--sage-3); }
+  .hero { position: relative; background: #2C4A36; overflow: hidden; } /* "Nova Forest": solid brand green, no fade — same pair as the logo (gold on green) */
+  .hero::after { content: ''; position: absolute; width: 180px; height: 180px; left: -60px; bottom: -70px; border-radius: 50%; border: 2px solid rgba(229, 187, 118, 0.45); }
   .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 26px 16px 72px; }
   .hero-copy { position: relative; z-index: 1; }
-  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; letter-spacing: .08em; color: var(--gold-deep); font-weight: 700; margin-bottom: 10px; }
-  .hero-eyebrow::before { content: ''; width: 22px; height: 2px; background: var(--gold); border-radius: 2px; }
-  .hero h1 { font-size: clamp(28px, 3.2vw, 42px); line-height: 1.12; font-weight: 800; color: var(--ink); max-width: 560px; }
-  .hero h1 em { font-style: normal; color: var(--gold-deep); }
-  .hero p { font-size: 15.5px; color: var(--ink-secondary); max-width: 500px; margin: 10px 0 20px; line-height: 1.65; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; letter-spacing: .08em; color: #E5BB76; font-weight: 700; margin-bottom: 10px; }
+  .hero-eyebrow::before { content: ''; width: 22px; height: 2px; background: #E5BB76; border-radius: 2px; }
+  .hero h1 { font-size: clamp(28px, 3.2vw, 42px); line-height: 1.12; font-weight: 800; color: #F6F1E6; max-width: 560px; }
+  .hero h1 em { font-style: normal; color: #E5BB76; }
+  .hero p { font-size: 15.5px; color: #CFDCCF; max-width: 500px; margin: 10px 0 20px; line-height: 1.65; }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
   .hero .btn-primary, .hero .btn-ghost { height: 44px; }
+  .hero .btn-primary { background: #E5BB76; color: #1F2A24; }
+  .hero .btn-primary:hover { background: #EDCD99; }
+  .hero .btn-ghost { color: #F6F1E6; }
+  .hero .btn-ghost:hover { background: rgba(255, 255, 255, 0.08); }
   .hero-frame { position: absolute; top: 0; right: 0; bottom: 0; width: min(47vw, 800px); }
   .hero-arch { height: 100%; border-radius: 190px 0 0 0; overflow: hidden; background: var(--sage-2); }
   .hero-arch img { width: 100%; height: 100%; object-fit: cover; object-position: 62% center; }
@@ -368,6 +372,39 @@
   .blog-post-content blockquote { margin: 22px 0; padding: 14px 20px; border-left: 4px solid var(--gold); background: var(--gold-soft); border-radius: 0 10px 10px 0; color: var(--ink); }
   .blog-post-content img { display: block; width: 100%; height: auto; border-radius: 12px; margin: 16px 0 22px; }
   .blog-post-content a { color: var(--green); font-weight: 600; }
+  /* ---------------- Contact page ---------------- */
+  .ct-wrap { max-width: 1160px; margin: 0 auto; padding: 36px 16px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .ct-left { position: relative; border-radius: 22px 0 0 22px; overflow: hidden; min-height: 620px; background: #2C4A36; }
+  .ct-left img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .ct-left::after { content: ''; position: absolute; inset: 0; background: rgba(20,36,27,.55); }
+  .ct-copy { position: absolute; z-index: 1; left: 40px; right: 40px; bottom: 40px; color: #F6F1E6; }
+  .ct-copy .ey { color: #E5BB76; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; }
+  .ct-copy h1 { font-size: 34px; line-height: 1.25; margin: 10px 0 12px; font-weight: 800; }
+  .ct-copy p { color: #DCE5D8; font-size: 15px; line-height: 1.7; margin: 0 0 22px; }
+  .ct-points { display: grid; gap: 12px; }
+  .ct-point { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: #E9EFE6; }
+  .ct-point b { display: block; color: #fff; font-size: 15px; }
+  .ct-ic { flex: 0 0 34px; height: 34px; border-radius: 50%; background: rgba(229,187,118,.22); color: #E5BB76; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; }
+  .ct-right { background: #fff; border: 1px solid var(--border); border-left: none; border-radius: 0 22px 22px 0; padding: 40px 42px; }
+  .ct-right h2 { font-size: 24px; margin: 0 0 6px; }
+  .ct-right .sub { color: var(--ink-secondary); font-size: 14px; margin-bottom: 22px; }
+  .ct-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ct-f { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink-secondary); }
+  .ct-f.full { grid-column: 1 / -1; }
+  .ct-f input, .ct-f select, .ct-f textarea { font: inherit; font-weight: 400; font-size: 14.5px; color: var(--ink); background: #FBF8F2; border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px; }
+  .ct-f textarea { min-height: 110px; resize: vertical; }
+  .ct-send:disabled { opacity: .6; }
+  .ct-send { margin-top: 18px; width: 100%; height: 50px; border: none; border-radius: 12px; background: #2C4A36; color: #fff; font: inherit; font-weight: 700; font-size: 15.5px; }
+  .ct-note { font-size: 12.5px; color: var(--muted); margin-top: 10px; text-align: center; }
+  .ct-direct { display: flex; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); font-size: 13.5px; color: var(--ink-secondary); flex-wrap: wrap; }
+  .ct-direct a { color: var(--green); font-weight: 700; text-decoration: none; }
+  @media (max-width: 820px) {
+    .ct-wrap { grid-template-columns: 1fr; padding: 20px 16px 48px; }
+    .ct-left { border-radius: 18px 18px 0 0; min-height: 430px; }
+    .ct-copy { left: 22px; right: 22px; bottom: 24px; } .ct-copy h1 { font-size: 26px; }
+    .ct-right { border-left: 1px solid var(--border); border-top: none; border-radius: 0 0 18px 18px; padding: 26px 20px; }
+    .ct-grid { grid-template-columns: 1fr; }
+  }
   .post-cta { margin: 36px 0 8px; padding: 24px 26px; border-radius: 16px; background: var(--sage); color: var(--ink); display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
   .post-cta h3 { font-size: 19px; margin-bottom: 4px; }
   .post-cta p { margin: 0; color: var(--ink-secondary); font-size: 14px; }
@@ -424,7 +461,7 @@
     <nav class="nav-links" id="nav-links">
       <a class="nav-link" id="nav-home" onclick="goBrowse()">หน้าแรก</a>
       <a class="nav-link" id="nav-blog" onclick="goBlogList()">Blog</a>
-      <a class="nav-link" id="nav-contact" onclick="scrollToContact()">ติดต่อเรา</a>
+      <a class="nav-link" id="nav-contact" onclick="goContact()">ติดต่อเรา</a>
       <a class="nav-cta nav-cta-mobile" href="tel:0624426529">&#9742; โทร 062-442-6529</a>
     </nav>
     <a class="nav-cta" href="tel:0624426529">&#9742; 062-442-6529</a>
@@ -550,6 +587,39 @@
     </div>
   </div>
 
+  <!-- CONTACT VIEW -->
+  <div id="view-contact" hidden>
+<div class="ct-wrap">
+  <div class="ct-left"><img src="assets/hero-banner.jpg" alt="" loading="lazy">
+    <div class="ct-copy">
+      <div class="ey">ติดต่อเรา</div>
+      <h1>คุยกับทีมที่ดูแลห้องจริง</h1>
+      <p>กำลังหาห้องเช่า หรืออยากให้เราดูแลห้องของคุณ บอกเราสั้นๆ ทีมงานจะติดต่อกลับภายใน 24 ชั่วโมง</p>
+      <div class="ct-points">
+        <div class="ct-point"><span class="ct-ic">1</span><div><b>ทุกห้องมีสัญญากับเจ้าของห้อง</b>ห้องที่ขึ้นบนเว็บนี้ เจ้าของเซ็นสัญญาให้เราดูแลแล้วทุกห้อง</div></div>
+        <div class="ct-point"><span class="ct-ic">2</span><div><b>รูปจริง ราคาจริง</b>เงื่อนไขหลักเขียนไว้ในหน้าห้องตั้งแต่แรก</div></div>
+        <div class="ct-point"><span class="ct-ic">3</span><div><b>ดูแลต่อหลังเซ็นสัญญา</b>แจ้งซ่อมหรือสอบถาม ติดต่อทีมเดิมได้ตลอดสัญญา</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="ct-right">
+    <h2>ส่งข้อความถึงเรา</h2>
+    <div class="sub">กรอกเท่าที่สะดวก ช่องที่มี * จำเป็นต้องกรอก</div>
+    <div class="ct-grid">
+      <label class="ct-f">ชื่อ-นามสกุล *<input id="ct-name" placeholder="ชื่อของคุณ" maxlength="120"></label>
+      <label class="ct-f">เบอร์โทร *<input id="ct-phone" type="tel" placeholder="08x-xxx-xxxx" maxlength="40"></label>
+      <label class="ct-f">อีเมล<input id="ct-email" type="email" placeholder="ไม่บังคับ" maxlength="120"></label>
+      <label class="ct-f">LINE ID<input id="ct-line" placeholder="ไม่บังคับ" maxlength="80"></label>
+      <label class="ct-f full">เรื่องที่ติดต่อ<select id="ct-topic"><option>หาห้องเช่า</option><option>ฝากห้องให้ Nova ดูแล</option><option>อื่นๆ</option></select></label>
+      <label class="ct-f full">ข้อความ<textarea id="ct-note" maxlength="1000" placeholder="เช่น ทำงานแถวแหลมฉบัง งบประมาณ 12,000 บาท อยากย้ายเข้าต้นเดือนหน้า"></textarea></label>
+    </div>
+    <button class="ct-send" id="ct-send" onclick="submitContact()">ส่งข้อความ</button>
+    <div class="ct-note">เราใช้ข้อมูลนี้เพื่อติดต่อกลับเท่านั้น</div>
+    <div class="ct-direct">หรือติดต่อโดยตรง <a href="tel:0624426529">&#9742; 062-442-6529</a> · <a href="mailto:sales@novawealthasset.com">sales@novawealthasset.com</a></div>
+  </div>
+</div>
+  </div>
+
   <!-- BLOG DETAIL VIEW -->
   <div id="view-blog-detail" class="wrap" hidden style="padding-bottom:20px;">
     <a class="detail-back" onclick="goBlogList()">&larr; กลับไปหน้าบทความ</a>
@@ -578,7 +648,7 @@
       <h4>เมนู</h4>
       <a onclick="goBrowse()">หน้าแรก</a>
       <a onclick="goBlogList()">Blog</a>
-      <a onclick="scrollToContact()">ติดต่อเรา</a>
+      <a onclick="goContact()">ติดต่อเรา</a>
     </div>
     <div>
       <h4>ติดต่อเรา</h4>
@@ -632,10 +702,25 @@
     if (el) el.classList.add('active');
   }
 
-  /* "ติดต่อเรา" scrolls to the footer without touching the hash router. */
-  function scrollToContact() {
-    closeNav();
-    document.getElementById('contact-section').scrollIntoView({ behavior: 'smooth' });
+  function goContact() { closeNav(); location.hash = '#/contact'; }
+
+  function submitContact() {
+    var v = function (id) { return document.getElementById(id).value.trim(); };
+    var name = v('ct-name'), phone = v('ct-phone'), btn = document.getElementById('ct-send');
+    if (!name || !phone) {
+      winDialog({ title: 'ข้อมูลยังไม่ครบ', icon: 'warn', html: 'กรุณากรอก<b>ชื่อ-นามสกุล</b>และ<b>เบอร์โทร</b>ก่อนส่งนะครับ' });
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'กำลังส่ง...';
+    jsonp({ api: 'lead', leadName: name, phone: phone, email: v('ct-email'), line: v('ct-line'), topic: v('ct-topic'), note: v('ct-note') }, function (res) {
+      btn.disabled = false; btn.textContent = 'ส่งข้อความ';
+      if (res.success) {
+        winDialog({ title: 'ส่งข้อความเรียบร้อย', icon: 'ok', html: 'ขอบคุณที่ติดต่อเราครับ<br>ทีมงานจะติดต่อกลับภายใน 24 ชม.<div class="win-note" style="margin-top:6px;">หากต้องการคุยด่วน โทร ' + PHONE_DISPLAY + '</div>' });
+        ['ct-name', 'ct-phone', 'ct-email', 'ct-line', 'ct-note'].forEach(function (id) { document.getElementById(id).value = ''; });
+      } else {
+        winDialog({ title: 'ส่งข้อความไม่สำเร็จ', icon: 'warn', html: esc(res.error) + '<div class="win-note" style="margin-top:6px;">ลองใหม่อีกครั้ง หรือโทร ' + PHONE_DISPLAY + '</div>' });
+      }
+    });
   }
   function scrollToListings() {
     document.getElementById('listings-section').scrollIntoView({ behavior: 'smooth' });
@@ -643,24 +728,46 @@
 
   /* JSONP — Apps Script responses carry no CORS header, so the response
      is loaded as a <script> tag (not subject to CORS) instead of fetch(). */
-  function jsonp(params, callback) {
+  function jsonpOnce(params, timeoutMs, callback) {
     var cbName = 'rosaCb' + Date.now() + Math.floor(Math.random() * 100000);
     var script = document.createElement('script');
-    window[cbName] = function (data) {
-      callback(data);
-      delete window[cbName];
+    var done = false, timer;
+    var finish = function (data) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      window[cbName] = function () {}; // a late answer after a timeout is ignored
       if (script.parentNode) script.parentNode.removeChild(script);
+      callback(data);
     };
+    window[cbName] = finish;
     var qs = Object.keys(params).map(function (k) {
-      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k] == null ? '' : params[k]);
     }).join('&');
     script.src = API_BASE + '?' + qs + '&callback=' + cbName;
-    script.onerror = function () {
-      callback({ success: false, error: 'โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่' });
-      delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
+    script.onerror = function () { finish({ success: false, error: 'โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่', network: true }); };
+    timer = setTimeout(function () { finish({ success: false, error: 'เชื่อมต่อช้า กรุณาลองใหม่', network: true }); }, timeoutMs);
     document.body.appendChild(script);
+  }
+
+  /* Reads retry once by themselves when the connection hiccups; a lead is sent once only (no double submit). */
+  function jsonp(params, callback) {
+    var isRead = params.api !== 'lead';
+    jsonpOnce(params, isRead ? 15000 : 30000, function (res) {
+      if (!res.success && res.network && isRead) {
+        setTimeout(function () { jsonpOnce(params, 20000, callback); }, 700);
+        return;
+      }
+      callback(res);
+    });
+  }
+
+  /* Last good answer kept in this browser, shown at once on the next visit while a fresh copy loads. */
+  function readSaved(key) {
+    try { var raw = localStorage.getItem('nova.' + key); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+  }
+  function saveLocal(key, data) {
+    try { localStorage.setItem('nova.' + key, JSON.stringify(data)); } catch (e) {}
   }
 
   function money(n) { return '฿' + Number(n || 0).toLocaleString(); }
@@ -669,21 +776,39 @@
     return 'โทร <a href="tel:' + PHONE_TEL + '">' + PHONE_DISPLAY + '</a> ให้ทีมงานช่วยหาห้องที่ตรงใจ';
   }
 
+  function showListings(data) {
+    state.loaded = true;
+    state.listings = data;
+    document.getElementById('hero-count').textContent = data.length;
+    document.getElementById('hero-badge').hidden = !data.length;
+    applyFilters(true);
+    renderZones();
+  }
+
   function loadListings() {
+    var saved = readSaved('listings');
+    if (saved && saved.length) showListings(saved);
     jsonp({ api: 'listings' }, function (res) {
       if (!res.success) {
-        document.getElementById('listing-grid').innerHTML = '<div class="empty-state">' + esc(res.error) + '<br>' + callUsHtml() + '</div>';
+        if (!state.loaded) document.getElementById('listing-grid').innerHTML = '<div class="empty-state">' + esc(res.error) + '<br>' + callUsHtml() + '</div>';
         return;
       }
-      state.loaded = true;
-      state.listings = res.data;
-      if (res.data.length) {
-        document.getElementById('hero-count').textContent = res.data.length;
-        document.getElementById('hero-badge').hidden = false;
-      }
-      state.filtered = res.data;
-      renderZones();
-      renderListings();
+      saveLocal('listings', res.data);
+      if (JSON.stringify(res.data) !== JSON.stringify(saved)) showListings(res.data);
+      prefetchPosts();
+    });
+  }
+
+  /* Blog list is fetched quietly after the rooms, so opening "Blog" is instant. */
+  function prefetchPosts() {
+    if (state.blogPosts.length || state.postsLoading) return;
+    state.postsLoading = true;
+    jsonp({ api: 'posts' }, function (res) {
+      state.postsLoading = false;
+      if (!res.success) return;
+      saveLocal('posts', res.data);
+      state.blogPosts = res.data;
+      if (location.hash === '#/blog') renderBlogList();
     });
   }
 
@@ -712,7 +837,7 @@
     scrollToListings();
   }
 
-  function applyFilters() {
+  function applyFilters(quiet) {
     var type = document.getElementById('f-type').value;
     var roomType = document.getElementById('f-roomtype').value;
     var priceRange = document.getElementById('f-price').value;
@@ -729,7 +854,7 @@
       return rate >= min && rate <= max;
     });
     renderListings();
-    scrollToListings();
+    if (quiet !== true) scrollToListings();
   }
 
   function renderListings() {
@@ -968,14 +1093,17 @@
   });
 
   function loadBlogList() {
-    document.getElementById('blog-grid').innerHTML = '<div class="loading-note">กำลังโหลดบทความ...</div>';
+    var saved = readSaved('posts');
+    if (saved && saved.length) { state.blogPosts = saved; renderBlogList(); }
+    else document.getElementById('blog-grid').innerHTML = '<div class="loading-note">กำลังโหลดบทความ...</div>';
     jsonp({ api: 'posts' }, function (res) {
       if (!res.success) {
-        document.getElementById('blog-grid').innerHTML = '<div class="empty-state">' + esc(res.error) + '</div>';
+        if (!state.blogPosts.length) document.getElementById('blog-grid').innerHTML = '<div class="empty-state">' + esc(res.error) + '<br><a href="javascript:void(0)" onclick="loadBlogList()">ลองโหลดอีกครั้ง</a></div>';
         return;
       }
+      saveLocal('posts', res.data);
       state.blogPosts = res.data;
-      renderBlogList();
+      if (location.hash === '#/blog') renderBlogList();
     });
   }
 
@@ -1067,7 +1195,7 @@
   /* ---------------- Router ---------------- */
 
   function showView(id) {
-    ['view-browse', 'view-detail', 'view-blog-list', 'view-blog-detail'].forEach(function (v) {
+    ['view-browse', 'view-detail', 'view-blog-list', 'view-blog-detail', 'view-contact'].forEach(function (v) {
       document.getElementById(v).hidden = (v !== id);
     });
   }
@@ -1084,6 +1212,9 @@
     } else if (blogDetailMatch) {
       setActiveNav('nav-blog');
       renderBlogDetail(decodeURIComponent(blogDetailMatch[1]));
+    } else if (hash === '#/contact') {
+      setActiveNav('nav-contact');
+      showView('view-contact');
     } else if (hash === '#/blog') {
       setActiveNav('nav-blog');
       showView('view-blog-list');
